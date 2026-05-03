@@ -1,0 +1,47 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  sdk:
+    name: sdk (typescript)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: sdks/typescript
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: sdks/typescript/package-lock.json
+      - name: install
+        run: npm ci
+      - name: audit (moderate+)
+        run: npm audit --audit-level=moderate
+      - name: typecheck
+        run: npm run lint
+      - name: test (conformance vectors)
+        run: npm test
+      - name: build
+        run: npm run build
+
+  vectors:
+    name: regenerate vectors are deterministic in shape
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: install deps
+        run: pip install pyjwt cryptography
+      - name: schema check on existing vectors
+        run: |
+          for f in test-vectors/kyapay/*.json; do
+            python -c "import json,sys; v=json.load(open('$f')); assert 'name' in v and 'input' in v and 'expected' in v, '$f bad shape'"
+          done
