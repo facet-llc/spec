@@ -18,7 +18,9 @@ We respond within 72 hours. Coordinated disclosure window is 90 days from acknow
 In scope:
 
 - The protocol spec in `SPEC.md`
-- Any reference verifier code shipped from this repo (v0.2 and later)
+- Any reference verifier or SDK shipped from this repo (`sdks/*`), all versions
+- The conformance test vectors and generator (`test-vectors/`)
+- The JSON schemas (`schemas/`)
 
 Out of scope (private repos, separate disclosure path):
 
