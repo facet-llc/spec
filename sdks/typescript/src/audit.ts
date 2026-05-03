@@ -39,7 +39,7 @@ function base64urlDecode(s: string): Uint8Array {
  */
 export async function verifyAuditRecord(
   record: AuditRecord,
-  options: AuditVerifierOptions
+  options: AuditVerifierOptions,
 ): Promise<AuditVerifyResult> {
   for (const field of REQUIRED_FIELDS) {
     if (record[field as keyof AuditRecord] === undefined) {
@@ -54,7 +54,9 @@ export async function verifyAuditRecord(
   if (matchingKey.kty !== 'OKP' || matchingKey.crv !== 'Ed25519') {
     return {
       verified: false,
-      errors: [`audit signing key must be Ed25519 OKP; got kty=${matchingKey.kty}, crv=${matchingKey.crv}`],
+      errors: [
+        `audit signing key must be Ed25519 OKP; got kty=${matchingKey.kty}, crv=${matchingKey.crv}`,
+      ],
     };
   }
 
@@ -76,18 +78,28 @@ export async function verifyAuditRecord(
     return { verified: false, errors: ['malformed sig (not base64url)'] };
   }
   if (signatureBytes.length !== 64) {
-    return { verified: false, errors: [`sig length must be 64 bytes, got ${signatureBytes.length}`] };
+    return {
+      verified: false,
+      errors: [`sig length must be 64 bytes, got ${signatureBytes.length}`],
+    };
   }
 
   try {
-    const cryptoKey = publicKey instanceof Uint8Array
-      ? await crypto.subtle.importKey('raw', publicKey as BufferSource, { name: 'Ed25519' }, false, ['verify'])
-      : publicKey;
+    const cryptoKey =
+      publicKey instanceof Uint8Array
+        ? await crypto.subtle.importKey(
+            'raw',
+            publicKey as BufferSource,
+            { name: 'Ed25519' },
+            false,
+            ['verify'],
+          )
+        : publicKey;
     const ok = await crypto.subtle.verify(
       { name: 'Ed25519' },
       cryptoKey,
       signatureBytes as BufferSource,
-      message as BufferSource
+      message as BufferSource,
     );
     return ok
       ? { verified: true, errors: [] }

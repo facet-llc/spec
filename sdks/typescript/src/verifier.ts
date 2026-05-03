@@ -78,7 +78,9 @@ function decodeUnverifiedPayload(jwt: string): Record<string, unknown> | null {
   }
 }
 
-function validateCustomClaims(p: JWTPayload): { ok: true; claims: KYAClaims } | { ok: false; reason: string } {
+function validateCustomClaims(
+  p: JWTPayload,
+): { ok: true; claims: KYAClaims } | { ok: false; reason: string } {
   if (p.agent_id !== undefined && typeof p.agent_id !== 'string') {
     return { ok: false, reason: 'agent_id must be a string' };
   }
@@ -93,7 +95,8 @@ function mapJoseError(err: unknown): string {
   if (err instanceof joseErrors.JWTClaimValidationFailed) {
     return err.claim === 'aud' ? 'audience mismatch' : `claim validation failed: ${err.claim}`;
   }
-  if (err instanceof joseErrors.JWSSignatureVerificationFailed) return 'signature verification failed';
+  if (err instanceof joseErrors.JWSSignatureVerificationFailed)
+    return 'signature verification failed';
   if (err instanceof joseErrors.JOSEError) return err.message;
   return err instanceof Error ? err.message : String(err);
 }
@@ -111,10 +114,7 @@ function mapJoseError(err: unknown): string {
  *   - iat, nbf, exp are valid relative to currentTime (with clockTolerance)
  *   - custom claims (agent_id, scope) match their declared types
  */
-export async function verifyKYAToken(
-  jwt: string,
-  options: VerifierOptions
-): Promise<VerifyResult> {
+export async function verifyKYAToken(jwt: string, options: VerifierOptions): Promise<VerifyResult> {
   const header = decodeUnverifiedHeader(jwt);
   if (!header) return { verified: false, errors: ['malformed jwt'] };
 

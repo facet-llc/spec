@@ -33,7 +33,7 @@ export class FacetError extends Error {
   constructor(
     message: string,
     public readonly status: number,
-    public readonly body: unknown
+    public readonly body: unknown,
   ) {
     super(message);
     this.name = 'FacetError';
@@ -49,7 +49,7 @@ export class PaymentRequiredError extends FacetError {
       chain: 'base' | 'base-sepolia';
       to: string;
     },
-    body: unknown
+    body: unknown,
   ) {
     super('payment required: x402', 402, body);
     this.name = 'PaymentRequiredError';
@@ -119,8 +119,8 @@ export class FacetTerminal {
     const token = await this.getKYAToken();
     const url = `${this.baseUrl}${path}`;
     const headers: Record<string, string> = {
-      'Authorization': `Bearer ${token}`,
-      'Accept': 'application/json',
+      Authorization: `Bearer ${token}`,
+      Accept: 'application/json',
     };
     if (body !== undefined) {
       headers['Content-Type'] = 'application/json';
@@ -147,7 +147,9 @@ export class FacetTerminal {
     }
 
     if (!res.ok) {
-      const message = (payload as { error?: { message?: string } })?.error?.message ?? `${method} ${path} failed: ${res.status}`;
+      const message =
+        (payload as { error?: { message?: string } })?.error?.message ??
+        `${method} ${path} failed: ${res.status}`;
       throw new FacetError(message, res.status, payload);
     }
 

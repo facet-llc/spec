@@ -27,7 +27,9 @@ interface Vector {
 const VECTORS_DIR = join(__dirname, '..', '..', '..', 'test-vectors', 'kyapay');
 
 function loadVectors(): Vector[] {
-  const files = readdirSync(VECTORS_DIR).filter((f) => f.endsWith('.json')).sort();
+  const files = readdirSync(VECTORS_DIR)
+    .filter((f) => f.endsWith('.json'))
+    .sort();
   return files.map((f) => JSON.parse(readFileSync(join(VECTORS_DIR, f), 'utf8')));
 }
 
@@ -47,9 +49,12 @@ describe('KYAPay verifier conformance', () => {
       if (!v.expected.verified && v.expected.errors.length > 0) {
         for (const expectedToken of v.expected.errors) {
           const matched = result.errors.some((e) =>
-            e.toLowerCase().includes(expectedToken.toLowerCase())
+            e.toLowerCase().includes(expectedToken.toLowerCase()),
           );
-          expect(matched, `vector ${v.name}: expected error containing "${expectedToken}", got ${JSON.stringify(result.errors)}`).toBe(true);
+          expect(
+            matched,
+            `vector ${v.name}: expected error containing "${expectedToken}", got ${JSON.stringify(result.errors)}`,
+          ).toBe(true);
         }
       }
 
