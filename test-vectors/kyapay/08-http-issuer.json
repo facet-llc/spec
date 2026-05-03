@@ -1,0 +1,21 @@
+{
+  "name": "http-issuer",
+  "description": "iss is http:// (not https). Verifier MUST refuse remote JWKS fetch over cleartext.",
+  "spec_section": "SPEC.md section 3",
+  "input": {
+    "jwt": "eyJhbGciOiJFUzI1NiIsImtpZCI6ImZhY2V0LXRlc3QtMjAyNi0wNSIsInR5cCI6Imt5YStqd3QifQ.eyJpc3MiOiJodHRwOi8vaXNzdWVyLmV4YW1wbGUuY29tIiwiYXVkIjoiaHR0cHM6Ly9tZXJjaGFudC5leGFtcGxlLmNvbSIsInN1YiI6ImRpZDpmYWNldDphZ2VudC0xIiwiaWF0IjoxNzI5OTk5OTQwLCJuYmYiOjE3Mjk5OTk5NDAsImV4cCI6MTczMDAwMzYwMCwiYWdlbnRfaWQiOiJkaWQ6ZmFjZXQ6YWdlbnQtMSIsInNjb3BlIjoic2VhcmNoIHF1b3RlIHNldHRsZSJ9.EHrGerAdtILwEuciUCVPwmTJd93MnMLNr4a9C6vI1kjnQus6_l0i0ZY1VVuaU1p3tjDuWMPVfYnt-sh2N-r9jw",
+    "verify_options": {
+      "audience": "https://merchant.example.com",
+      "expected_issuers": [
+        "http://issuer.example.com"
+      ]
+    },
+    "now": 1730000000
+  },
+  "expected": {
+    "verified": false,
+    "errors": [
+      "https"
+    ]
+  }
+}

@@ -1,9 +1,9 @@
 {
-  "name": "wrong-algorithm",
-  "description": "Token signed with HS256. v0.1 verifiers MUST accept only ES256.",
+  "name": "missing-kid",
+  "description": "JWT header lacks kid. Verifier MUST refuse rather than fall back to the first JWKS key.",
   "spec_section": "SPEC.md section 3",
   "input": {
-    "jwt": "eyJhbGciOiJIUzI1NiIsImtpZCI6ImZhY2V0LXRlc3QtMjAyNi0wNSIsInR5cCI6Imt5YStqd3QifQ.eyJpc3MiOiJodHRwczovL2lzc3Vlci5leGFtcGxlLmNvbSIsImF1ZCI6Imh0dHBzOi8vbWVyY2hhbnQuZXhhbXBsZS5jb20iLCJzdWIiOiJkaWQ6ZmFjZXQ6YWdlbnQtMSIsImlhdCI6MTcyOTk5OTk0MCwibmJmIjoxNzI5OTk5OTQwLCJleHAiOjE3MzAwMDM2MDAsImFnZW50X2lkIjoiZGlkOmZhY2V0OmFnZW50LTEiLCJzY29wZSI6InNlYXJjaCBxdW90ZSBzZXR0bGUifQ.ULt4BsSdzafDNpioGoEECDKOY67O8i_namFNBeNa6aM",
+    "jwt": "eyJhbGciOiJFUzI1NiIsInR5cCI6Imt5YStqd3QifQ.eyJpc3MiOiJodHRwczovL2lzc3Vlci5leGFtcGxlLmNvbSIsImF1ZCI6Imh0dHBzOi8vbWVyY2hhbnQuZXhhbXBsZS5jb20iLCJzdWIiOiJkaWQ6ZmFjZXQ6YWdlbnQtMSIsImlhdCI6MTcyOTk5OTk0MCwibmJmIjoxNzI5OTk5OTQwLCJleHAiOjE3MzAwMDM2MDAsImFnZW50X2lkIjoiZGlkOmZhY2V0OmFnZW50LTEiLCJzY29wZSI6InNlYXJjaCBxdW90ZSBzZXR0bGUifQ.SWnSxJVnrJwdSHMhQOUa9c8sL7ovxbrjMDAgKx9CMHSzK6NBEkJ4OM1b3ElZ0x9y56uoqVvoJpdeUhIwD9LeHA",
     "jwks": {
       "keys": [
         {
@@ -28,7 +28,7 @@
   "expected": {
     "verified": false,
     "errors": [
-      "unsupported algorithm"
+      "kid"
     ]
   }
 }

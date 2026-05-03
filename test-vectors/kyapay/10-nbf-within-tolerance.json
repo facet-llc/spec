@@ -1,0 +1,32 @@
+{
+  "name": "nbf-within-tolerance",
+  "description": "nbf is 10s after now; default 30s clockTolerance allows it.",
+  "spec_section": "SPEC.md section 3",
+  "input": {
+    "jwt": "eyJhbGciOiJFUzI1NiIsImtpZCI6ImZhY2V0LXRlc3QtMjAyNi0wNSIsInR5cCI6Imt5YStqd3QifQ.eyJpc3MiOiJodHRwczovL2lzc3Vlci5leGFtcGxlLmNvbSIsImF1ZCI6Imh0dHBzOi8vbWVyY2hhbnQuZXhhbXBsZS5jb20iLCJzdWIiOiJkaWQ6ZmFjZXQ6YWdlbnQtMSIsImlhdCI6MTczMDAwMDAxMCwibmJmIjoxNzMwMDAwMDEwLCJleHAiOjE3MzAwMDM2MDAsImFnZW50X2lkIjoiZGlkOmZhY2V0OmFnZW50LTEiLCJzY29wZSI6InNlYXJjaCBxdW90ZSBzZXR0bGUifQ.jFe888_bWi4u78z5kzBWZTT4vXxIsDUvLJhN0dFNTnzBBaFQiZLTbgpZf-OxSKhZ5ntPz-Y2vXU6qUZ4mofVnw",
+    "jwks": {
+      "keys": [
+        {
+          "kty": "EC",
+          "crv": "P-256",
+          "x": "XR8lGpU1bavqyVYMXyXkyo11kCgVan2MhjNUgUyXUB0",
+          "y": "7tetPDkMdH76JsnvHrY6PGFTqh3mUKe9QH2CMC3K-JQ",
+          "kid": "facet-test-2026-05",
+          "alg": "ES256",
+          "use": "sig"
+        }
+      ]
+    },
+    "verify_options": {
+      "audience": "https://merchant.example.com",
+      "expected_issuers": [
+        "https://issuer.example.com"
+      ]
+    },
+    "now": 1730000000
+  },
+  "expected": {
+    "verified": true,
+    "errors": []
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "name": "no-expected-issuers",
+  "description": "Caller passed neither expectedIssuers nor jwks. Verifier MUST refuse.",
+  "spec_section": "SPEC.md section 3 (trust gate)",
+  "input": {
+    "jwt": "eyJhbGciOiJFUzI1NiIsImtpZCI6ImZhY2V0LXRlc3QtMjAyNi0wNSIsInR5cCI6Imt5YStqd3QifQ.eyJpc3MiOiJodHRwczovL2lzc3Vlci5leGFtcGxlLmNvbSIsImF1ZCI6Imh0dHBzOi8vbWVyY2hhbnQuZXhhbXBsZS5jb20iLCJzdWIiOiJkaWQ6ZmFjZXQ6YWdlbnQtMSIsImlhdCI6MTcyOTk5OTk0MCwibmJmIjoxNzI5OTk5OTQwLCJleHAiOjE3MzAwMDM2MDAsImFnZW50X2lkIjoiZGlkOmZhY2V0OmFnZW50LTEiLCJzY29wZSI6InNlYXJjaCBxdW90ZSBzZXR0bGUifQ.FpXoGJsvowDVP3ztZ1b7nu1UTaipowikcCVjSQZUw65Gn___OqVbBHWSXODNXQ_edtucHt0i0I0ga1-wAdWR7Q",
+    "verify_options": {
+      "audience": "https://merchant.example.com"
+    },
+    "now": 1730000000
+  },
+  "expected": {
+    "verified": false,
+    "errors": [
+      "expectedIssuers"
+    ]
+  }
+}
