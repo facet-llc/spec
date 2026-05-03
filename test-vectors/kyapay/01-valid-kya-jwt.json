@@ -1,0 +1,39 @@
+{
+  "name": "valid-kya-jwt",
+  "description": "ES256-signed kya+jwt with all claims valid at now=1730000000",
+  "spec_section": "SPEC.md section 3",
+  "input": {
+    "jwt": "eyJhbGciOiJFUzI1NiIsImtpZCI6ImZhY2V0LXRlc3QtMjAyNi0wNSIsInR5cCI6Imt5YStqd3QifQ.eyJpc3MiOiJodHRwczovL2lzc3Vlci5leGFtcGxlLmNvbSIsImF1ZCI6Imh0dHBzOi8vbWVyY2hhbnQuZXhhbXBsZS5jb20iLCJzdWIiOiJkaWQ6ZmFjZXQ6YWdlbnQtMSIsImlhdCI6MTcyOTk5OTk0MCwibmJmIjoxNzI5OTk5OTQwLCJleHAiOjE3MzAwMDM2MDAsImFnZW50X2lkIjoiZGlkOmZhY2V0OmFnZW50LTEiLCJzY29wZSI6InNlYXJjaCBxdW90ZSBzZXR0bGUifQ.YFY9k7vYGLN6b-PpOCbPJITEKXHaHk8E73kBrlDd2a99JbmdPRDg5hSaqGIQg0H7ExNtdHEWpo5Pz5dSf0rvwQ",
+    "jwks": {
+      "keys": [
+        {
+          "kty": "EC",
+          "crv": "P-256",
+          "x": "rjWsmN3qLdUfcLe8cU9Ytvc-3hrGxfyrsz2JE_r4VbU",
+          "y": "EjwAH-gtbETxzrHD_-Q8NUIjhhK97GCia0CoRn9PiQQ",
+          "kid": "facet-test-2026-05",
+          "alg": "ES256",
+          "use": "sig"
+        }
+      ]
+    },
+    "verify_options": {
+      "audience": "https://merchant.example.com",
+      "expected_issuers": [
+        "https://issuer.example.com"
+      ]
+    },
+    "now": 1730000000
+  },
+  "expected": {
+    "verified": true,
+    "claims": {
+      "iss": "https://issuer.example.com",
+      "aud": "https://merchant.example.com",
+      "sub": "did:facet:agent-1",
+      "agent_id": "did:facet:agent-1",
+      "scope": "search quote settle"
+    },
+    "errors": []
+  }
+}
