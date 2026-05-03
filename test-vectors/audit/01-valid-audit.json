@@ -1,0 +1,34 @@
+{
+  "name": "valid-audit",
+  "description": "Ed25519-signed audit record with all required fields. Verifier returns verified=true.",
+  "spec_section": "AUDIT.md",
+  "input": {
+    "record": {
+      "txn_id": "txn_abc123",
+      "iat": 1730000000,
+      "merchant": "did:facet:merchant-1",
+      "agent": "did:facet:agent-1",
+      "amount": "250.00",
+      "currency": "USDC",
+      "tx_hash": "0xabababababababababababababababababababababababababababababababab",
+      "kid": "merchant-2026-05-A",
+      "sig": "HFmdzlfaGd_8KzpS-abQ87epg3ZMp2mNTLem1rRsaqCAzX-eOpkCKTMGWaw8gi-mGfo8UMCN_2Ldugz5K_L7DA"
+    },
+    "jwks": {
+      "keys": [
+        {
+          "kty": "OKP",
+          "crv": "Ed25519",
+          "x": "xgx0he9vvnYP0PGdXxGpMno2BtNfwFA31fFtrQDN810",
+          "kid": "merchant-2026-05-A",
+          "alg": "EdDSA",
+          "use": "sig"
+        }
+      ]
+    }
+  },
+  "expected": {
+    "verified": true,
+    "errors": []
+  }
+}

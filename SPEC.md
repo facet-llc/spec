@@ -71,7 +71,7 @@ Every settled transaction returns a signed audit record. This is Facet-specific 
 }
 ```
 
-Verifier semantics for audit records: see [`AUDIT.md`](./AUDIT.md) (coming v0.2).
+Verifier semantics for audit records: see [`AUDIT.md`](./AUDIT.md).
 
 ## 7. References
 
