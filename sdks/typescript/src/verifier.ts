@@ -1,4 +1,11 @@
-import { jwtVerify, createRemoteJWKSet, importJWK, JWK, JWTPayload } from 'jose';
+import {
+  jwtVerify,
+  createRemoteJWKSet,
+  importJWK,
+  errors as joseErrors,
+  type JWK,
+  type JWTPayload,
+} from 'jose';
 
 export interface KYAClaims extends JWTPayload {
   agent_id?: string;
@@ -8,18 +15,30 @@ export interface KYAClaims extends JWTPayload {
 export interface VerifierOptions {
   /** Your merchant URL or DID. The token's `aud` must match. */
   audience: string;
-  /** Optional issuer allowlist. If set, the token's `iss` must be in this list. */
+  /**
+   * Issuer allowlist. Required when `jwks` is not provided. The token's `iss`
+   * must be in this list, and only HTTPS issuer URLs are accepted.
+   *
+   * Without this, the verifier would fetch a JWKS from any issuer URL the JWT
+   * claims, accepting tokens from any internet-reachable host that publishes
+   * a valid JWKS. That is a trust bypass; we refuse the unsafe default.
+   */
   expectedIssuers?: string[];
   /**
-   * Override "now" for verification (Unix epoch seconds). Useful for replaying
-   * test vectors against a frozen timestamp. Defaults to wall clock.
+   * Override "now" (Unix epoch seconds). Useful for replaying conformance
+   * vectors against a frozen timestamp.
    */
   currentTime?: number;
   /**
-   * Bring-your-own JWKS (instead of fetching by issuer URL). Useful for tests
-   * and air-gapped deployments.
+   * Bring-your-own JWKS. When set, the verifier skips the issuer-driven JWKS
+   * fetch entirely. Useful for tests, air-gapped deploys, and pinned-key
+   * rotation.
    */
   jwks?: { keys: JWK[] };
+  /** Clock skew tolerance for iat/nbf/exp checks. Defaults to '30s'. */
+  clockTolerance?: string | number;
+  /** JWKS fetch timeout (ms). Defaults to 5000. */
+  jwksTimeoutMs?: number;
 }
 
 export interface VerifyResult {
@@ -28,14 +47,22 @@ export interface VerifyResult {
   errors: string[];
 }
 
+const MAX_JWKS_CACHE = 64;
 const remoteJwksCache = new Map<string, ReturnType<typeof createRemoteJWKSet>>();
+
+function rememberJwks(url: string, set: ReturnType<typeof createRemoteJWKSet>) {
+  if (remoteJwksCache.size >= MAX_JWKS_CACHE) {
+    const oldest = remoteJwksCache.keys().next().value;
+    if (oldest !== undefined) remoteJwksCache.delete(oldest);
+  }
+  remoteJwksCache.set(url, set);
+}
 
 function decodeUnverifiedHeader(jwt: string): Record<string, unknown> | null {
   const parts = jwt.split('.');
   if (parts.length !== 3) return null;
   try {
-    const json = Buffer.from(parts[0]!, 'base64url').toString();
-    return JSON.parse(json);
+    return JSON.parse(Buffer.from(parts[0]!, 'base64url').toString());
   } catch {
     return null;
   }
@@ -45,11 +72,30 @@ function decodeUnverifiedPayload(jwt: string): Record<string, unknown> | null {
   const parts = jwt.split('.');
   if (parts.length !== 3) return null;
   try {
-    const json = Buffer.from(parts[1]!, 'base64url').toString();
-    return JSON.parse(json);
+    return JSON.parse(Buffer.from(parts[1]!, 'base64url').toString());
   } catch {
     return null;
   }
+}
+
+function validateCustomClaims(p: JWTPayload): { ok: true; claims: KYAClaims } | { ok: false; reason: string } {
+  if (p.agent_id !== undefined && typeof p.agent_id !== 'string') {
+    return { ok: false, reason: 'agent_id must be a string' };
+  }
+  if (p.scope !== undefined && typeof p.scope !== 'string') {
+    return { ok: false, reason: 'scope must be a string' };
+  }
+  return { ok: true, claims: p as KYAClaims };
+}
+
+function mapJoseError(err: unknown): string {
+  if (err instanceof joseErrors.JWTExpired) return 'expired';
+  if (err instanceof joseErrors.JWTClaimValidationFailed) {
+    return err.claim === 'aud' ? 'audience mismatch' : `claim validation failed: ${err.claim}`;
+  }
+  if (err instanceof joseErrors.JWSSignatureVerificationFailed) return 'signature verification failed';
+  if (err instanceof joseErrors.JOSEError) return err.message;
+  return err instanceof Error ? err.message : String(err);
 }
 
 /**
@@ -59,15 +105,16 @@ function decodeUnverifiedPayload(jwt: string): Record<string, unknown> | null {
  *   - alg MUST be ES256
  *   - signature verifies against issuer JWKS
  *   - aud matches options.audience
- *   - iss is in options.expectedIssuers (if set)
- *   - iat, nbf, exp are valid relative to currentTime
+ *   - iss is in options.expectedIssuers (required unless options.jwks is set)
+ *   - iss URL uses https when fetching JWKS remotely
+ *   - kid header is present and matches a key in the JWKS
+ *   - iat, nbf, exp are valid relative to currentTime (with clockTolerance)
+ *   - custom claims (agent_id, scope) match their declared types
  */
 export async function verifyKYAToken(
   jwt: string,
   options: VerifierOptions
 ): Promise<VerifyResult> {
-  const errors: string[] = [];
-
   const header = decodeUnverifiedHeader(jwt);
   if (!header) return { verified: false, errors: ['malformed jwt'] };
 
@@ -78,6 +125,11 @@ export async function verifyKYAToken(
     };
   }
 
+  const kid = (header as { kid?: string }).kid;
+  if (typeof kid !== 'string' || kid.length === 0) {
+    return { verified: false, errors: ['jwt header missing kid'] };
+  }
+
   const payload = decodeUnverifiedPayload(jwt);
   if (!payload) return { verified: false, errors: ['malformed jwt payload'] };
 
@@ -86,23 +138,45 @@ export async function verifyKYAToken(
     return { verified: false, errors: ['missing iss claim'] };
   }
 
-  if (options.expectedIssuers && !options.expectedIssuers.includes(iss)) {
+  // Trust gate: require explicit issuer allowlist OR explicit jwks.
+  // Without one of those, the verifier would accept any issuer that hosts a
+  // valid JWKS, which is a trust bypass. Refuse the unsafe default.
+  const hasAllowlist = Array.isArray(options.expectedIssuers) && options.expectedIssuers.length > 0;
+  if (!options.jwks && !hasAllowlist) {
+    return {
+      verified: false,
+      errors: [
+        'expectedIssuers is required when jwks is not provided. ' +
+          'Pass an allowlist of trusted issuer URLs to prevent JWKS-trust bypass.',
+      ],
+    };
+  }
+
+  if (hasAllowlist && !options.expectedIssuers!.includes(iss)) {
     return { verified: false, errors: [`unexpected issuer: ${iss}`] };
   }
 
-  // Resolve JWKS: prefer explicit options.jwks; otherwise fetch from issuer.
+  // Resolve the verification key.
   let getKey: Parameters<typeof jwtVerify>[1];
   if (options.jwks) {
-    const kid = (header as { kid?: string }).kid;
-    const matchingKey = options.jwks.keys.find((k) => k.kid === kid) ?? options.jwks.keys[0];
-    if (!matchingKey) return { verified: false, errors: ['no matching key in JWKS'] };
+    const matchingKey = options.jwks.keys.find((k) => k.kid === kid);
+    if (!matchingKey) {
+      return { verified: false, errors: [`no key in JWKS matching kid=${kid}`] };
+    }
     getKey = await importJWK(matchingKey, 'ES256');
   } else {
+    if (!iss.startsWith('https://')) {
+      return { verified: false, errors: ['issuer must use https for remote JWKS resolution'] };
+    }
     const jwksUrl = new URL('/.well-known/jwks.json', iss);
-    let remote = remoteJwksCache.get(jwksUrl.toString());
+    const cacheKey = jwksUrl.toString();
+    let remote = remoteJwksCache.get(cacheKey);
     if (!remote) {
-      remote = createRemoteJWKSet(jwksUrl);
-      remoteJwksCache.set(jwksUrl.toString(), remote);
+      remote = createRemoteJWKSet(jwksUrl, {
+        timeoutDuration: options.jwksTimeoutMs ?? 5000,
+        cooldownDuration: 30_000,
+      });
+      rememberJwks(cacheKey, remote);
     }
     getKey = remote;
   }
@@ -111,16 +185,16 @@ export async function verifyKYAToken(
     const { payload: verifiedPayload } = await jwtVerify(jwt, getKey, {
       audience: options.audience,
       algorithms: ['ES256'],
+      clockTolerance: options.clockTolerance ?? '30s',
       currentDate: options.currentTime ? new Date(options.currentTime * 1000) : undefined,
     });
-    return { verified: true, claims: verifiedPayload as KYAClaims, errors: [] };
+
+    const validated = validateCustomClaims(verifiedPayload);
+    if (!validated.ok) {
+      return { verified: false, errors: [validated.reason] };
+    }
+    return { verified: true, claims: validated.claims, errors: [] };
   } catch (err: unknown) {
-    const message = err instanceof Error ? err.message : String(err);
-    // Normalize jose's error messages into the spec's error vocabulary.
-    if (message.includes('exp')) errors.push('expired');
-    else if (message.includes('aud')) errors.push('audience mismatch');
-    else if (message.includes('signature')) errors.push('signature verification failed');
-    else errors.push(message);
-    return { verified: false, errors };
+    return { verified: false, errors: [mapJoseError(err)] };
   }
 }
