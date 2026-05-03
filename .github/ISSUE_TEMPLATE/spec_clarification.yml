@@ -1,0 +1,27 @@
+name: Spec clarification
+description: Ask about ambiguous or unclear language in SPEC.md
+title: "[clarify]: "
+labels: ["spec", "clarification"]
+body:
+  - type: input
+    id: section
+    attributes:
+      label: Section
+      description: Which section of SPEC.md (e.g. "3. Identity (KYAPay)")
+      placeholder: "3. Identity (KYAPay)"
+    validations:
+      required: true
+  - type: textarea
+    id: question
+    attributes:
+      label: What's unclear?
+      description: Quote the specific text and explain what's ambiguous
+    validations:
+      required: true
+  - type: textarea
+    id: context
+    attributes:
+      label: What are you trying to do?
+      description: Helps us answer in the right way
+    validations:
+      required: false

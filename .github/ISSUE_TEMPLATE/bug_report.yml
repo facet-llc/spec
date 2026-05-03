@@ -1,0 +1,32 @@
+name: Bug report
+description: Report a bug in the spec, reference verifier, or examples
+title: "[bug]: "
+labels: ["bug"]
+body:
+  - type: input
+    id: version
+    attributes:
+      label: Version or commit
+      description: Spec version or commit SHA
+      placeholder: "v0.1.0 or 478cf7a"
+    validations:
+      required: true
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: What did you expect?
+    validations:
+      required: true
+  - type: textarea
+    id: repro
+    attributes:
+      label: How to reproduce
+      description: Minimal steps. If a code sample, include it
+    validations:
+      required: true

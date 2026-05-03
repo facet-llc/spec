@@ -1,0 +1,54 @@
+name: RFC proposal
+description: Propose a spec change for a future version
+title: "[rfc]: "
+labels: ["rfc"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Before opening an RFC issue, consider starting in [Discussions](https://github.com/facet-llc/protocol/discussions) first.
+        RFC issues are for proposals that have already had at least 7 days of community discussion.
+  - type: input
+    id: discussion
+    attributes:
+      label: Linked Discussion
+      description: URL of the Discussion thread where this was workshopped
+      placeholder: "https://github.com/facet-llc/protocol/discussions/..."
+    validations:
+      required: true
+  - type: textarea
+    id: summary
+    attributes:
+      label: Summary
+      description: One paragraph
+    validations:
+      required: true
+  - type: textarea
+    id: motivation
+    attributes:
+      label: Motivation
+      description: What problem does this solve? What use case enables it?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposal
+      description: Concrete spec change. Quote the section text and show the proposed replacement.
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+    validations:
+      required: false
+  - type: dropdown
+    id: scope
+    attributes:
+      label: Version scope
+      options:
+        - Backward-compatible (minor bump)
+        - Breaking (major bump)
+    validations:
+      required: true
