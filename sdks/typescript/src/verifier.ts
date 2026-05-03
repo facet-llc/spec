@@ -156,38 +156,39 @@ export async function verifyKYAToken(
     return { verified: false, errors: [`unexpected issuer: ${iss}`] };
   }
 
-  // Resolve the verification key.
-  let getKey: Parameters<typeof jwtVerify>[1];
-  if (options.jwks) {
-    const matchingKey = options.jwks.keys.find((k) => k.kid === kid);
-    if (!matchingKey) {
-      return { verified: false, errors: [`no key in JWKS matching kid=${kid}`] };
-    }
-    getKey = await importJWK(matchingKey, 'ES256');
-  } else {
-    if (!iss.startsWith('https://')) {
-      return { verified: false, errors: ['issuer must use https for remote JWKS resolution'] };
-    }
-    const jwksUrl = new URL('/.well-known/jwks.json', iss);
-    const cacheKey = jwksUrl.toString();
-    let remote = remoteJwksCache.get(cacheKey);
-    if (!remote) {
-      remote = createRemoteJWKSet(jwksUrl, {
-        timeoutDuration: options.jwksTimeoutMs ?? 5000,
-        cooldownDuration: 30_000,
-      });
-      rememberJwks(cacheKey, remote);
-    }
-    getKey = remote;
-  }
+  const verifyOpts = {
+    audience: options.audience,
+    algorithms: ['ES256'],
+    clockTolerance: options.clockTolerance ?? '30s',
+    currentDate: options.currentTime ? new Date(options.currentTime * 1000) : undefined,
+  };
 
   try {
-    const { payload: verifiedPayload } = await jwtVerify(jwt, getKey, {
-      audience: options.audience,
-      algorithms: ['ES256'],
-      clockTolerance: options.clockTolerance ?? '30s',
-      currentDate: options.currentTime ? new Date(options.currentTime * 1000) : undefined,
-    });
+    let verifiedPayload: JWTPayload;
+
+    if (options.jwks) {
+      const matchingKey = options.jwks.keys.find((k) => k.kid === kid);
+      if (!matchingKey) {
+        return { verified: false, errors: [`no key in JWKS matching kid=${kid}`] };
+      }
+      const key = await importJWK(matchingKey, 'ES256');
+      ({ payload: verifiedPayload } = await jwtVerify(jwt, key, verifyOpts));
+    } else {
+      if (!iss.startsWith('https://')) {
+        return { verified: false, errors: ['issuer must use https for remote JWKS resolution'] };
+      }
+      const jwksUrl = new URL('/.well-known/jwks.json', iss);
+      const cacheKey = jwksUrl.toString();
+      let remote = remoteJwksCache.get(cacheKey);
+      if (!remote) {
+        remote = createRemoteJWKSet(jwksUrl, {
+          timeoutDuration: options.jwksTimeoutMs ?? 5000,
+          cooldownDuration: 30_000,
+        });
+        rememberJwks(cacheKey, remote);
+      }
+      ({ payload: verifiedPayload } = await jwtVerify(jwt, remote, verifyOpts));
+    }
 
     const validated = validateCustomClaims(verifiedPayload);
     if (!validated.ok) {
