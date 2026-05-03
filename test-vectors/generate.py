@@ -181,7 +181,7 @@ write_vector("06-no-expected-issuers.json", {
         "verify_options": {"audience": AUDIENCE},
         "now": NOW,
     },
-    "expected": {"verified": False, "errors": ["expectedIssuers"]},
+    "expected": {"verified": False, "errors": ["allowlist"]},
 })
 
 # 7. Missing kid: verifier MUST reject (no first-key fallback)

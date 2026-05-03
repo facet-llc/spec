@@ -3,14 +3,14 @@
   "description": "exp claim is in the past relative to now. Verifier MUST reject.",
   "spec_section": "SPEC.md section 3",
   "input": {
-    "jwt": "eyJhbGciOiJFUzI1NiIsImtpZCI6ImZhY2V0LXRlc3QtMjAyNi0wNSIsInR5cCI6Imt5YStqd3QifQ.eyJpc3MiOiJodHRwczovL2lzc3Vlci5leGFtcGxlLmNvbSIsImF1ZCI6Imh0dHBzOi8vbWVyY2hhbnQuZXhhbXBsZS5jb20iLCJzdWIiOiJkaWQ6ZmFjZXQ6YWdlbnQtMSIsImlhdCI6MTcyOTk5MjgwMCwibmJmIjoxNzI5OTk5OTQwLCJleHAiOjE3Mjk5OTk5NDAsImFnZW50X2lkIjoiZGlkOmZhY2V0OmFnZW50LTEiLCJzY29wZSI6InNlYXJjaCBxdW90ZSBzZXR0bGUifQ.iczBYiL4OZQiTCV6m8I8CrX6HnssrgHYYfzdkQmjT2gZLyuuuqlqp9VW7TmL1rFqw9OHX6cKTWxyOFBEc-K89g",
+    "jwt": "eyJhbGciOiJFUzI1NiIsImtpZCI6ImZhY2V0LXRlc3QtMjAyNi0wNSIsInR5cCI6Imt5YStqd3QifQ.eyJpc3MiOiJodHRwczovL2lzc3Vlci5leGFtcGxlLmNvbSIsImF1ZCI6Imh0dHBzOi8vbWVyY2hhbnQuZXhhbXBsZS5jb20iLCJzdWIiOiJkaWQ6ZmFjZXQ6YWdlbnQtMSIsImlhdCI6MTcyOTk5MjgwMCwibmJmIjoxNzI5OTk5OTQwLCJleHAiOjE3Mjk5OTk5NDAsImFnZW50X2lkIjoiZGlkOmZhY2V0OmFnZW50LTEiLCJzY29wZSI6InNlYXJjaCBxdW90ZSBzZXR0bGUifQ.8Pzw61Qzmbj73sfEbvtztEqBxBc2AxWDH2V5xplIuPPujnot51UjSS67-DLoMY-XKRP0AYNLs0mxbCW8mqv4iQ",
     "jwks": {
       "keys": [
         {
           "kty": "EC",
           "crv": "P-256",
-          "x": "XR8lGpU1bavqyVYMXyXkyo11kCgVan2MhjNUgUyXUB0",
-          "y": "7tetPDkMdH76JsnvHrY6PGFTqh3mUKe9QH2CMC3K-JQ",
+          "x": "PQ5ejMf8dNCCYFXEF8Yn0sgt4cFZKYbJeZ0um_6YZpI",
+          "y": "xqntpT85h5W0ni2nfiqEBsmlVOzg05IEn5OQPPBi9Cw",
           "kid": "facet-test-2026-05",
           "alg": "ES256",
           "use": "sig"

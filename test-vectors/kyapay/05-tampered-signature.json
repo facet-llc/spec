@@ -3,14 +3,14 @@
   "description": "First byte of decoded signature flipped. Cryptographic verification MUST fail.",
   "spec_section": "SPEC.md section 3",
   "input": {
-    "jwt": "eyJhbGciOiJFUzI1NiIsImtpZCI6ImZhY2V0LXRlc3QtMjAyNi0wNSIsInR5cCI6Imt5YStqd3QifQ.eyJpc3MiOiJodHRwczovL2lzc3Vlci5leGFtcGxlLmNvbSIsImF1ZCI6Imh0dHBzOi8vbWVyY2hhbnQuZXhhbXBsZS5jb20iLCJzdWIiOiJkaWQ6ZmFjZXQ6YWdlbnQtMSIsImlhdCI6MTcyOTk5OTk0MCwibmJmIjoxNzI5OTk5OTQwLCJleHAiOjE3MzAwMDM2MDAsImFnZW50X2lkIjoiZGlkOmZhY2V0OmFnZW50LTEiLCJzY29wZSI6InNlYXJjaCBxdW90ZSBzZXR0bGUifQ.RGTgmFMHexGz_QdXnMSrl2ryLYS-mkqsTgvlO6bZCRt-Qy0KHC109JRUFCyWJTdQTFwiHZNymGbp60rlZeNYTQ",
+    "jwt": "eyJhbGciOiJFUzI1NiIsImtpZCI6ImZhY2V0LXRlc3QtMjAyNi0wNSIsInR5cCI6Imt5YStqd3QifQ.eyJpc3MiOiJodHRwczovL2lzc3Vlci5leGFtcGxlLmNvbSIsImF1ZCI6Imh0dHBzOi8vbWVyY2hhbnQuZXhhbXBsZS5jb20iLCJzdWIiOiJkaWQ6ZmFjZXQ6YWdlbnQtMSIsImlhdCI6MTcyOTk5OTk0MCwibmJmIjoxNzI5OTk5OTQwLCJleHAiOjE3MzAwMDM2MDAsImFnZW50X2lkIjoiZGlkOmZhY2V0OmFnZW50LTEiLCJzY29wZSI6InNlYXJjaCBxdW90ZSBzZXR0bGUifQ.qr0_-thmbzA3bOSErGTMvAHAgQNME-B5K76bm8P2KndVtRSaW86RX_0d-qc5dUyUSN2sgP8JKpp3Owa7ZOsZEA",
     "jwks": {
       "keys": [
         {
           "kty": "EC",
           "crv": "P-256",
-          "x": "XR8lGpU1bavqyVYMXyXkyo11kCgVan2MhjNUgUyXUB0",
-          "y": "7tetPDkMdH76JsnvHrY6PGFTqh3mUKe9QH2CMC3K-JQ",
+          "x": "PQ5ejMf8dNCCYFXEF8Yn0sgt4cFZKYbJeZ0um_6YZpI",
+          "y": "xqntpT85h5W0ni2nfiqEBsmlVOzg05IEn5OQPPBi9Cw",
           "kid": "facet-test-2026-05",
           "alg": "ES256",
           "use": "sig"

@@ -30,18 +30,32 @@ jobs:
       - name: build
         run: npm run build
 
+  sdk-python:
+    name: sdk (python)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: sdks/python
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: install
+        run: pip install -e ".[test]"
+      - name: test (kyapay + audit conformance)
+        run: pytest -v
+
   vectors:
-    name: regenerate vectors are deterministic in shape
+    name: vectors (shape sanity)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - name: install deps
-        run: pip install pyjwt cryptography
       - name: schema check on existing vectors
         run: |
-          for f in test-vectors/kyapay/*.json; do
+          for f in test-vectors/kyapay/*.json test-vectors/audit/*.json; do
             python -c "import json,sys; v=json.load(open('$f')); assert 'name' in v and 'input' in v and 'expected' in v, '$f bad shape'"
           done

@@ -9,8 +9,8 @@
         {
           "kty": "EC",
           "crv": "P-256",
-          "x": "XR8lGpU1bavqyVYMXyXkyo11kCgVan2MhjNUgUyXUB0",
-          "y": "7tetPDkMdH76JsnvHrY6PGFTqh3mUKe9QH2CMC3K-JQ",
+          "x": "PQ5ejMf8dNCCYFXEF8Yn0sgt4cFZKYbJeZ0um_6YZpI",
+          "y": "xqntpT85h5W0ni2nfiqEBsmlVOzg05IEn5OQPPBi9Cw",
           "kid": "facet-test-2026-05",
           "alg": "ES256",
           "use": "sig"

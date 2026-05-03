@@ -3,14 +3,14 @@
   "description": "ES256-signed kya+jwt with all claims valid at now=1730000000",
   "spec_section": "SPEC.md section 3",
   "input": {
-    "jwt": "eyJhbGciOiJFUzI1NiIsImtpZCI6ImZhY2V0LXRlc3QtMjAyNi0wNSIsInR5cCI6Imt5YStqd3QifQ.eyJpc3MiOiJodHRwczovL2lzc3Vlci5leGFtcGxlLmNvbSIsImF1ZCI6Imh0dHBzOi8vbWVyY2hhbnQuZXhhbXBsZS5jb20iLCJzdWIiOiJkaWQ6ZmFjZXQ6YWdlbnQtMSIsImlhdCI6MTcyOTk5OTk0MCwibmJmIjoxNzI5OTk5OTQwLCJleHAiOjE3MzAwMDM2MDAsImFnZW50X2lkIjoiZGlkOmZhY2V0OmFnZW50LTEiLCJzY29wZSI6InNlYXJjaCBxdW90ZSBzZXR0bGUifQ.TZXfoVajJuYxQmNuw7eslZ93uLoenDdBD7zwQfwErs04uNQSuQWvI_AFxvKL03OYtWQ1a_UT2yMLPgesrD5bLQ",
+    "jwt": "eyJhbGciOiJFUzI1NiIsImtpZCI6ImZhY2V0LXRlc3QtMjAyNi0wNSIsInR5cCI6Imt5YStqd3QifQ.eyJpc3MiOiJodHRwczovL2lzc3Vlci5leGFtcGxlLmNvbSIsImF1ZCI6Imh0dHBzOi8vbWVyY2hhbnQuZXhhbXBsZS5jb20iLCJzdWIiOiJkaWQ6ZmFjZXQ6YWdlbnQtMSIsImlhdCI6MTcyOTk5OTk0MCwibmJmIjoxNzI5OTk5OTQwLCJleHAiOjE3MzAwMDM2MDAsImFnZW50X2lkIjoiZGlkOmZhY2V0OmFnZW50LTEiLCJzY29wZSI6InNlYXJjaCBxdW90ZSBzZXR0bGUifQ.wA23BxNuEu5Q53vpUeOc4VprCg61Z302ukRCzZovVwkmJjmvYm8cazFrUksFa7SMWn3vy7QZu45b05etH8OkJg",
     "jwks": {
       "keys": [
         {
           "kty": "EC",
           "crv": "P-256",
-          "x": "XR8lGpU1bavqyVYMXyXkyo11kCgVan2MhjNUgUyXUB0",
-          "y": "7tetPDkMdH76JsnvHrY6PGFTqh3mUKe9QH2CMC3K-JQ",
+          "x": "PQ5ejMf8dNCCYFXEF8Yn0sgt4cFZKYbJeZ0um_6YZpI",
+          "y": "xqntpT85h5W0ni2nfiqEBsmlVOzg05IEn5OQPPBi9Cw",
           "kid": "facet-test-2026-05",
           "alg": "ES256",
           "use": "sig"
