@@ -1,6 +1,6 @@
 # Facet Protocol
 
-The search engine for agentic commerce.
+The index of agent-ready businesses.
 
 ## Why
 

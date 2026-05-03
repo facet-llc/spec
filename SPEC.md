@@ -6,7 +6,7 @@
 
 ## 1. Introduction
 
-Facet is the search engine for agentic commerce. This document specifies the protocol that lets autonomous agents discover, identify, transact with, and audit any participating merchant on the web.
+Facet is the index of agent-ready businesses. This document specifies the protocol that lets autonomous agents discover, identify, transact with, and audit any participating merchant on the web.
 
 The protocol composes four open standards into one rail:
 
