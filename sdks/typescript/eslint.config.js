@@ -1,5 +1,6 @@
 import js from '@eslint/js';
 import ts from 'typescript-eslint';
+import security from 'eslint-plugin-security';
 
 export default [
   {
@@ -7,6 +8,7 @@ export default [
   },
   js.configs.recommended,
   ...ts.configs.recommended,
+  security.configs.recommended,
   {
     languageOptions: {
       parserOptions: {
@@ -26,6 +28,10 @@ export default [
         Promise: 'readonly',
         BufferSource: 'readonly',
         CryptoKey: 'readonly',
+        Response: 'readonly',
+        AbortController: 'readonly',
+        setTimeout: 'readonly',
+        clearTimeout: 'readonly',
         globalThis: 'readonly',
       },
     },
@@ -34,6 +40,17 @@ export default [
       '@typescript-eslint/no-explicit-any': 'warn',
       'no-console': 'off',
       'no-undef': 'off',
+      // Tuned for SDK code: object-injection rule false-positives on
+      // typed property access; dropped because all object reads here go
+      // through validated keys (kid, iss, etc.).
+      'security/detect-object-injection': 'off',
+    },
+  },
+  {
+    // Test files legitimately read conformance vectors by path.
+    files: ['test/**/*.ts'],
+    rules: {
+      'security/detect-non-literal-fs-filename': 'off',
     },
   },
 ];

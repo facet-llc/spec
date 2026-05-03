@@ -20,6 +20,8 @@ export interface TerminalConfig {
   getKYAToken: () => Promise<string> | string;
   /** Override fetch (Node 18+ has it native; pass a mock for tests). */
   fetch?: typeof globalThis.fetch;
+  /** Per-request timeout in milliseconds. Defaults to 10000. */
+  timeoutMs?: number;
 }
 
 export interface SearchOptions {
@@ -76,11 +78,13 @@ export class FacetTerminal {
   private readonly baseUrl: string;
   private readonly fetchImpl: typeof globalThis.fetch;
   private readonly getKYAToken: TerminalConfig['getKYAToken'];
+  private readonly timeoutMs: number;
 
   constructor(config: TerminalConfig) {
     this.baseUrl = (config.baseUrl ?? 'https://facet.llc').replace(/\/$/, '');
     this.fetchImpl = config.fetch ?? globalThis.fetch;
     this.getKYAToken = config.getKYAToken;
+    this.timeoutMs = config.timeoutMs ?? 10_000;
   }
 
   async getCapabilities(): Promise<unknown> {
@@ -126,11 +130,19 @@ export class FacetTerminal {
       headers['Content-Type'] = 'application/json';
     }
 
-    const res = await this.fetchImpl(url, {
-      method,
-      headers,
-      body: body === undefined ? undefined : JSON.stringify(body),
-    });
+    const controller = new AbortController();
+    const timeoutHandle = setTimeout(() => controller.abort(), this.timeoutMs);
+    let res: Response;
+    try {
+      res = await this.fetchImpl(url, {
+        method,
+        headers,
+        body: body === undefined ? undefined : JSON.stringify(body),
+        signal: controller.signal,
+      });
+    } finally {
+      clearTimeout(timeoutHandle);
+    }
 
     const contentType = res.headers.get('content-type') ?? '';
     const payload = contentType.includes('application/json')

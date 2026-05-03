@@ -30,9 +30,14 @@ def _b64u_decode(s: str) -> bytes:
 
 
 def _canonicalize(record: dict[str, Any]) -> str:
-    """Per AUDIT.md: drop sig+kid, sort top-level keys, no whitespace."""
+    """Per AUDIT.md: drop sig+kid, sort top-level keys, no whitespace, raw UTF-8.
+
+    ensure_ascii=False matters: TypeScript JSON.stringify keeps non-ASCII as
+    raw UTF-8, so the Python verifier must too or signatures don't cross-verify
+    on records with non-ASCII content (real merchant names, addresses, etc.).
+    """
     filtered = {k: v for k, v in record.items() if k not in ("sig", "kid")}
-    return json.dumps(filtered, sort_keys=True, separators=(",", ":"))
+    return json.dumps(filtered, sort_keys=True, separators=(",", ":"), ensure_ascii=False)
 
 
 def verify_audit_record(

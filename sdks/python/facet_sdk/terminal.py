@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from typing import Any, Callable
+from urllib.parse import quote
 
 import httpx
 
@@ -72,7 +73,7 @@ class FacetTerminal:
     def get_audit_record(self, txn_id: str) -> dict[str, Any]:
         if not txn_id or not isinstance(txn_id, str):
             raise ValueError("txn_id must be a non-empty string")
-        return self._send("GET", f"/v1/audit/{txn_id}")
+        return self._send("GET", f"/v1/audit/{quote(txn_id, safe='')}")
 
     def _send(
         self,

@@ -12,14 +12,14 @@
       "currency": "USDC",
       "tx_hash": "0xabababababababababababababababababababababababababababababababab",
       "kid": "merchant-2026-05-A",
-      "sig": "HFmdzlfaGd_8KzpS-abQ87epg3ZMp2mNTLem1rRsaqCAzX-eOpkCKTMGWaw8gi-mGfo8UMCN_2Ldugz5K_L7DA"
+      "sig": "isCxDEgy9aXHZSxcgD0TsbCXBdQP2J2NZmm9p1HnTZVq9VwBQz4P_UVCJwm4dXfeOwZLTWKvBz3YkGssNFWZDw"
     },
     "jwks": {
       "keys": [
         {
           "kty": "OKP",
           "crv": "Ed25519",
-          "x": "a69OaIc_nUp8igMjNiZgbxKm26PVJuMeXghqwTcArDk",
+          "x": "ORqhzVl7PZOqxAOyINLeqRbYVoAvXyBBPMDUUJuYq28",
           "kid": "merchant-2026-05-B",
           "alg": "EdDSA",
           "use": "sig"

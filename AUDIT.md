@@ -34,7 +34,7 @@ The bytes that get signed are produced this way:
    - UTF-8 encoding
    - Sort top-level keys lexicographically
    - No whitespace between tokens (no indentation, no separator spaces)
-   - Strings escaped per RFC 8259 (no extra escapes)
+   - Strings escaped per RFC 8259, with one tightening: **non-ASCII characters MUST be retained as raw UTF-8 byte sequences**. Implementations MUST NOT escape them as `\uXXXX`. This aligns with RFC 8785 section 3.2.5 and ensures cross-language verifiers (e.g., Python's `json.dumps` and JavaScript's `JSON.stringify`) produce identical bytes.
 4. The resulting byte sequence is the message that goes through Ed25519.
 
 This is a subset of [RFC 8785](https://www.rfc-editor.org/rfc/rfc8785) (JSON Canonicalization Scheme). v0.1 only supports flat top-level objects so the simpler subset suffices. v0.2 will widen to full RFC 8785 when nested objects appear in audit records.

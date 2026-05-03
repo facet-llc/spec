@@ -37,9 +37,9 @@ def gen_keypair(kid):
 
 
 def canonicalize(record):
-    """Per AUDIT.md: drop sig+kid, sort keys, no whitespace."""
+    """Per AUDIT.md: drop sig+kid, sort keys, no whitespace, raw UTF-8."""
     filtered = {k: v for k, v in record.items() if k not in ("sig", "kid")}
-    return json.dumps(filtered, sort_keys=True, separators=(",", ":"))
+    return json.dumps(filtered, sort_keys=True, separators=(",", ":"), ensure_ascii=False)
 
 
 def sign(record, priv, kid):
@@ -114,4 +114,17 @@ write_vector("04-missing-required-field.json", {
     "expected": {"verified": False, "errors": ["missing required field: agent"]},
 })
 
-print(f"done. wrote 4 vectors to {OUT}")
+# 5. Non-ASCII content. Locks in the canonical JSON ensure_ascii=False rule
+# from AUDIT.md and proves cross-language interop on real-world merchant
+# names.
+non_ascii_record = dict(base_record, merchant="did:facet:café-bistro")
+record5 = sign(non_ascii_record, priv_a, KID_A)
+write_vector("05-non-ascii-merchant.json", {
+    "name": "non-ascii-merchant",
+    "description": "Merchant DID contains non-ASCII (é). Both Python and TypeScript verifiers MUST verify identically (raw UTF-8 in canonical bytes, no \\uXXXX escapes).",
+    "spec_section": "AUDIT.md (canonicalization rule 3)",
+    "input": {"record": record5, "jwks": jwks_just_a},
+    "expected": {"verified": True, "errors": []},
+})
+
+print(f"done. wrote 5 vectors to {OUT}")

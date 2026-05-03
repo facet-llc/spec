@@ -120,7 +120,7 @@ def verify_kya_token(token: str, options: VerifierOptions) -> VerifyResult:
                 False, errors=["issuer must use https for remote JWKS resolution"]
             )
         try:
-            jwks_client = pyjwt.PyJWKClient(f"{iss}/.well-known/jwks.json")
+            jwks_client = pyjwt.PyJWKClient(f"{iss}/.well-known/jwks.json", timeout=5)
             signing_key = jwks_client.get_signing_key(kid).key
         except Exception as e:
             return VerifyResult(False, errors=[f"jwks fetch failed: {e}"])

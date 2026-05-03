@@ -1,17 +1,18 @@
 {
-  "name": "missing-required-field",
-  "description": "agent field stripped. Verifier MUST reject before checking signature.",
-  "spec_section": "AUDIT.md",
+  "name": "non-ascii-merchant",
+  "description": "Merchant DID contains non-ASCII (\u00e9). Both Python and TypeScript verifiers MUST verify identically (raw UTF-8 in canonical bytes, no \\uXXXX escapes).",
+  "spec_section": "AUDIT.md (canonicalization rule 3)",
   "input": {
     "record": {
       "txn_id": "txn_abc123",
       "iat": 1730000000,
-      "merchant": "did:facet:merchant-1",
+      "merchant": "did:facet:caf\u00e9-bistro",
+      "agent": "did:facet:agent-1",
       "amount": "250.00",
       "currency": "USDC",
       "tx_hash": "0xabababababababababababababababababababababababababababababababab",
       "kid": "merchant-2026-05-A",
-      "sig": "isCxDEgy9aXHZSxcgD0TsbCXBdQP2J2NZmm9p1HnTZVq9VwBQz4P_UVCJwm4dXfeOwZLTWKvBz3YkGssNFWZDw"
+      "sig": "cS7qk6u3_mh66NzcnvI9WgSDnj7O4LfJkprpATUQg46qrA9Rw6u0Rpx37puWxHy8zdklA66JRFa2D3ej4i-IDQ"
     },
     "jwks": {
       "keys": [
@@ -27,9 +28,7 @@
     }
   },
   "expected": {
-    "verified": false,
-    "errors": [
-      "missing required field: agent"
-    ]
+    "verified": true,
+    "errors": []
   }
 }
