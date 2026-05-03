@@ -5,6 +5,18 @@ All notable changes to the Facet Protocol specification will be documented in th
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Changed
+
+- Tagline: "the search engine for agentic commerce" became "the index of agent-ready businesses". Sharper category framing.
+
+### Added
+
+- JSON Schema definitions for the six v0.1 endpoints, in `schemas/`.
+- KYAPay JWT conformance test vectors, in `test-vectors/kyapay/`.
+- Reference TypeScript SDK scaffold (`@facet/sdk-js` v0.0.1) with a real KYAPay verifier built on `jose`, in `sdks/typescript/`.
+
 ## [0.1.0] - 2026-05-03
 
 ### Added
@@ -21,9 +33,6 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ### Coming in v0.2
 
-- Reference verifier (TypeScript)
-- SDK packages (`@facet/sdk-js`, `@facet/sdk-python`, `@facet/sdk-go`)
-- JSON Schema for every endpoint
-- Test vectors for KYAPay JWT conformance
 - Multi-rail payment support (Visa VIC, Mastercard SCOF) per KYAPay `stp` claim
+- SDK packages in Python and Go
 - Example merchant integration end-to-end
