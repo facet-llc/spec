@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { readdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
+import type { JWK } from 'jose';
 import { verifyKYAToken } from '../src/verifier.js';
 
 interface Vector {
@@ -9,7 +10,7 @@ interface Vector {
   spec_section: string;
   input: {
     jwt: string;
-    jwks?: { keys: unknown[] };
+    jwks?: { keys: JWK[] };
     verify_options: {
       audience: string;
       expected_issuers?: string[];
@@ -36,7 +37,7 @@ describe('KYAPay verifier conformance', () => {
       const result = await verifyKYAToken(v.input.jwt, {
         audience: v.input.verify_options.audience,
         expectedIssuers: v.input.verify_options.expected_issuers,
-        jwks: v.input.jwks as { keys: never[] } | undefined,
+        jwks: v.input.jwks,
         currentTime: v.input.now,
       });
 

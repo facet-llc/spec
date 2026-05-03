@@ -125,7 +125,7 @@ export async function verifyKYAToken(
     };
   }
 
-  const kid = (header as { kid?: string }).kid;
+  const kid = header.kid;
   if (typeof kid !== 'string' || kid.length === 0) {
     return { verified: false, errors: ['jwt header missing kid'] };
   }

@@ -35,7 +35,7 @@ POST /v1/settle               → Settle a reservation (x402)
 GET  /v1/audit/<txn-id>       → Signed audit record
 ```
 
-Full request/response schemas: see [`schemas/`](./schemas) (coming v0.2).
+Full request/response schemas: see [`schemas/`](./schemas).
 
 ## 3. Identity (KYAPay)
 
