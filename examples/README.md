@@ -1,12 +1,12 @@
-# Facet Protocol Examples
+# Examples
 
-End-to-end integration examples land in `v0.2`. Planned:
+End-to-end integrations land in v0.2. Planned:
 
-- **`hello-agent/`** — minimal agent that calls `/v1/search`, picks a listing, settles via x402
-- **`merchant-typescript/`** — minimal Facet-compliant merchant in TypeScript with KYAPay verifier
-- **`merchant-python/`** — same in Python (FastAPI)
-- **`merchant-go/`** — same in Go (chi)
+- `hello-agent/`: minimal agent that calls `/v1/search`, picks a listing, settles via x402
+- `merchant-typescript/`: Facet-compliant merchant in TypeScript with a KYAPay verifier
+- `merchant-python/`: same in Python (FastAPI)
+- `merchant-go/`: same in Go (chi)
 
-Until then, see [`../SPEC.md`](../SPEC.md) for the wire-format reference.
+Until then, see [`../SPEC.md`](../SPEC.md) for the wire format.
 
-Want to contribute an example? Open a [Discussion](https://github.com/facet-llc/protocol/discussions) first to align on scope.
+Want to contribute one? Open a [Discussion](https://github.com/facet-llc/protocol/discussions) first to align on scope.
