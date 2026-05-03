@@ -1,0 +1,56 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://facet.llc/schemas/v1.search.json",
+  "title": "Facet v1 search",
+  "$defs": {
+    "Request": {
+      "type": "object",
+      "description": "Query string parameters for GET /v1/search.",
+      "required": ["q"],
+      "properties": {
+        "q": { "type": "string", "minLength": 1, "description": "Natural-language query." },
+        "k": { "type": "integer", "minimum": 1, "maximum": 100, "default": 10 },
+        "naics": { "type": "string", "pattern": "^[0-9]{2,6}$", "description": "Optional NAICS prefix filter." },
+        "geo": { "type": "string", "description": "Optional location filter (city, state, or zip)." }
+      }
+    },
+    "Response": {
+      "type": "object",
+      "required": ["query", "results"],
+      "properties": {
+        "query": { "type": "string" },
+        "results": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/Listing" }
+        },
+        "audit": { "$ref": "v1.audit.json#/$defs/Record" }
+      }
+    },
+    "Listing": {
+      "type": "object",
+      "required": ["id", "name", "score", "endpoints"],
+      "properties": {
+        "id": { "type": "string", "description": "Stable identifier; DID preferred." },
+        "name": { "type": "string" },
+        "naics": { "type": "string", "pattern": "^[0-9]{2,6}$" },
+        "score": { "type": "number", "minimum": 0, "maximum": 1, "description": "Cosine similarity to query." },
+        "geo": {
+          "type": "object",
+          "properties": {
+            "city": { "type": "string" },
+            "state": { "type": "string", "minLength": 2, "maxLength": 2 },
+            "zip": { "type": "string", "pattern": "^[0-9]{5}(-[0-9]{4})?$" }
+          }
+        },
+        "endpoints": {
+          "type": "object",
+          "required": ["quote"],
+          "properties": {
+            "capabilities": { "type": "string", "format": "uri" },
+            "quote": { "type": "string", "format": "uri" }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://facet.llc/schemas/v1.capabilities.json",
+  "title": "Facet v1 capabilities (MCP manifest with x402 pricing)",
+  "$defs": {
+    "Response": {
+      "type": "object",
+      "required": ["protocolVersion", "serverInfo", "capabilities"],
+      "properties": {
+        "protocolVersion": {
+          "type": "string",
+          "description": "MCP protocol version. v0.1 targets 2024-11-05."
+        },
+        "serverInfo": {
+          "type": "object",
+          "required": ["name", "version"],
+          "properties": {
+            "name": { "type": "string" },
+            "version": { "type": "string" }
+          }
+        },
+        "capabilities": {
+          "type": "object",
+          "properties": {
+            "resources": { "type": "object" },
+            "tools": { "type": "object" },
+            "facet:pricing": {
+              "type": "object",
+              "description": "x402 pricing extension. Keys are tool/resource ids; values are PricingRule.",
+              "additionalProperties": { "$ref": "#/$defs/PricingRule" }
+            }
+          }
+        }
+      }
+    },
+    "PricingRule": {
+      "type": "object",
+      "required": ["amount", "currency"],
+      "properties": {
+        "amount": { "type": "string", "pattern": "^[0-9]+(\\.[0-9]+)?$" },
+        "currency": { "type": "string", "enum": ["USDC"] },
+        "chain": { "type": "string", "enum": ["base", "base-sepolia"] }
+      }
+    }
+  }
+}

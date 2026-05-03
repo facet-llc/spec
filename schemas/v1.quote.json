@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://facet.llc/schemas/v1.quote.json",
+  "title": "Facet v1 quote",
+  "$defs": {
+    "Request": {
+      "type": "object",
+      "required": ["listing_id"],
+      "properties": {
+        "listing_id": { "type": "string", "description": "Listing.id from a /v1/search response." },
+        "params": {
+          "type": "object",
+          "description": "Listing-specific parameters (qty, scheduling window, options).",
+          "additionalProperties": true
+        }
+      }
+    },
+    "Response": {
+      "type": "object",
+      "required": ["quote_id", "amount", "currency", "expires_at", "reserve_endpoint"],
+      "properties": {
+        "quote_id": { "type": "string" },
+        "amount": { "type": "string", "pattern": "^[0-9]+(\\.[0-9]+)?$" },
+        "currency": { "type": "string", "enum": ["USDC"] },
+        "chain": { "type": "string", "enum": ["base", "base-sepolia"], "default": "base" },
+        "expires_at": { "type": "integer", "description": "Unix epoch seconds when this quote stops being valid." },
+        "reserve_endpoint": { "type": "string", "format": "uri" }
+      }
+    }
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://facet.llc/schemas/v1.settle.json",
+  "title": "Facet v1 settle",
+  "$defs": {
+    "Request": {
+      "type": "object",
+      "required": ["reservation_id", "x402_payment"],
+      "properties": {
+        "reservation_id": { "type": "string" },
+        "x402_payment": {
+          "type": "object",
+          "description": "x402 payment receipt the merchant uses to confirm settlement.",
+          "required": ["tx_hash", "chain"],
+          "properties": {
+            "tx_hash": { "type": "string", "pattern": "^0x[0-9a-fA-F]{64}$" },
+            "chain": { "type": "string", "enum": ["base", "base-sepolia"] },
+            "amount": { "type": "string" }
+          }
+        }
+      }
+    },
+    "Response": {
+      "type": "object",
+      "required": ["txn_id", "audit_endpoint"],
+      "properties": {
+        "txn_id": { "type": "string" },
+        "audit_endpoint": { "type": "string", "format": "uri", "description": "GET this for the signed audit record." },
+        "fulfillment": {
+          "type": "object",
+          "description": "Listing-specific fulfillment payload (booking ref, scheduled time, etc).",
+          "additionalProperties": true
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://facet.llc/schemas/v1.audit.json",
+  "title": "Facet v1 audit record (Ed25519-signed)",
+  "$defs": {
+    "Response": { "$ref": "#/$defs/Record" },
+    "Record": {
+      "type": "object",
+      "required": ["txn_id", "iat", "merchant", "agent", "sig", "kid"],
+      "properties": {
+        "txn_id": { "type": "string" },
+        "iat": { "type": "integer", "description": "Unix epoch seconds when the record was signed." },
+        "merchant": { "type": "string", "description": "Merchant DID." },
+        "agent": { "type": "string", "description": "Agent DID derived from the KYAPay JWT used to settle." },
+        "amount": { "type": "string" },
+        "currency": { "type": "string", "enum": ["USDC"] },
+        "tx_hash": { "type": "string", "pattern": "^0x[0-9a-fA-F]{64}$" },
+        "sig": {
+          "type": "string",
+          "description": "Ed25519 signature over the canonical JSON of the record without the sig field. base64url-encoded."
+        },
+        "kid": {
+          "type": "string",
+          "description": "Merchant signing key id; resolves via JWKS at merchant DID."
+        }
+      }
+    }
+  }
+}

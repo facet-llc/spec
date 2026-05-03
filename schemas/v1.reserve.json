@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://facet.llc/schemas/v1.reserve.json",
+  "title": "Facet v1 reserve",
+  "$defs": {
+    "Request": {
+      "type": "object",
+      "required": ["quote_id"],
+      "properties": {
+        "quote_id": { "type": "string" }
+      }
+    },
+    "Response": {
+      "type": "object",
+      "required": ["reservation_id", "expires_at", "settle_endpoint"],
+      "properties": {
+        "reservation_id": { "type": "string" },
+        "expires_at": { "type": "integer", "description": "Unix epoch seconds when the reservation is released." },
+        "settle_endpoint": { "type": "string", "format": "uri" },
+        "x402_required": {
+          "type": "object",
+          "description": "x402 payment instructions returned in the 402 response body.",
+          "properties": {
+            "amount": { "type": "string" },
+            "currency": { "type": "string", "enum": ["USDC"] },
+            "chain": { "type": "string", "enum": ["base", "base-sepolia"] },
+            "to": { "type": "string", "description": "Settlement recipient address." }
+          }
+        }
+      }
+    }
+  }
+}
