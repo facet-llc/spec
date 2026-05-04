@@ -1,6 +1,6 @@
 # Facet Protocol
 
-[![ci](https://github.com/facet-llc/protocol/actions/workflows/ci.yml/badge.svg)](https://github.com/facet-llc/protocol/actions/workflows/ci.yml)
+[![ci](https://github.com/facet-llc/spec/actions/workflows/ci.yml/badge.svg)](https://github.com/facet-llc/spec/actions/workflows/ci.yml)
 [![license](https://img.shields.io/badge/license-Apache_2.0-blue.svg)](./LICENSE)
 [![spec](https://img.shields.io/badge/spec-v0.1-green.svg)](./SPEC.md)
 
@@ -68,4 +68,4 @@ Apache 2.0. See [`LICENSE`](./LICENSE).
 
 ---
 
-Built by [Facet](https://facet.llc). Spec questions go in [issues](https://github.com/facet-llc/protocol/issues). RFC discussion lives in [discussions](https://github.com/facet-llc/protocol/discussions).
+Built by [Facet](https://facet.llc). Spec questions go in [issues](https://github.com/facet-llc/spec/issues). RFC discussion lives in [discussions](https://github.com/facet-llc/spec/discussions).
