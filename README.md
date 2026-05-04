@@ -19,6 +19,8 @@ curl -s https://facet.llc
 # 402 Payment Required. Identify via KYAPay, pay per-query at the Terminal.
 ```
 
+> Windows note. PowerShell aliases `curl` to `Invoke-WebRequest`, which does not accept the `-s` flag. Use `curl.exe -s https://facet.llc` instead. The real curl binary ships with Windows 10+.
+
 The site is the demo. Scrape it and you get the protocol response. Send a valid KYAPay JWT and you get ranked, typed listings to quote, reserve, and settle.
 
 ```bash
