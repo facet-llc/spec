@@ -43,6 +43,8 @@ The four open standards we ride:
 
 ## What's in here
 
+- [`WHITEPAPER.md`](./WHITEPAPER.md): full design rationale, market thesis, and architecture. ~9,000 words. Read this for the deep-dive.
+
 - [`SPEC.md`](./SPEC.md): v0.1 protocol spec, RFC-style. Read this if you're implementing a verifier or a Facet-compliant merchant.
 - [`ARCHITECTURE.md`](./ARCHITECTURE.md): how the pieces fit, where the trust boundaries are, the protocol-flow diagram.
 - [`schemas/`](./schemas/): JSON Schema for all six v0.1 endpoints.
