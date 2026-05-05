@@ -6,14 +6,6 @@ Version 0.1, 2026-04-17, Published under the facet-llc organization
 
 ---
 
-## 0. v1.1 update note (2026-04-30)
-
-This whitepaper was originally written when Facet was positioned as an agent-commerce gateway for transactional sites (Catalog primitive only). The 2026-04-30 strategic update extends Facet's coverage to **eight business-archetype primitives** (Catalog, Paywalled Content, Subscription, Booking, Date-Bound Inventory, Auction, Quote/RFQ, Credentialed/Regulated) plus a thin View+Handoff primitive for non-transactional listings, anchored by a **Universal Business Index (UBI)** foundation that indexes every business with any web/maps/social presence (~65-80M globally). New §6.5 introduces the primitive layer; renamed §8 + new §8.5 clarify how the four atomic verbs from the original §8 compose into each primitive. Companion canonical references: `docs/founding/PRIMITIVES.md` (per-primitive deep-dive) and `docs/founding/UBI_MODEL.md` (UBI architecture). The protocol layer (KYAPay + MCP + x402 + RFC 9421) is unchanged; the manifest spec bumps from v1.0 → v1.1 (purely additive, see `specs/agents.txt-v1.1.md`).
-
-## 0.1 v1.2 update note (2026-05-01)
-
-Adds a **knowledge graph layer** over UBI: `kg_nodes` / `kg_edges` / `kg_reports` (ported from autonomi-vault's `graphify/` system) provide pgvector semantic search and N-hop typed-edge traversal across the directory. New §6.5.11 introduces the layer and its three Terminal endpoints (`POST /v1/graph/match`, `GET /v1/graph/related`, `GET /v1/graph/path`); the existing §6.5.11 coverage table becomes §6.5.12. Schema, ingestion paths, RPC signatures, and phasing live in `UBI_MODEL.md` §6.5; the file-by-file execution plan is at `tasks/facet-graphify-integration-plan-2026-05-01.md`. No verb changes, no primitive additions, no protocol-layer impact, purely a substrate capability under the existing 8-primitive surface.
-
 ## 1. Abstract
 
 Agent-mediated traffic has crossed the majority threshold on many commercial websites, and the protocol layer for agent-to-business interaction is being standardized in real time by a coalition of well-capitalized players, Anthropic (Model Context Protocol), KYAPay (IETF Independent Submission), Coinbase (x402 HTTP payments + AgentKit), and Cloudflare (RFC 9421 signed-bot-auth). This paper introduces Facet, **a horizontal product-layer installed above those rails**, a standalone tool every website can deploy to protect itself from unidentified scrapers and monetize verified good-agent traffic. Facet addresses the problems the horizontal protocol stack leaves unsolved: catalog-to-agent schema generation, site-side agent traffic analytics, agent reputation scoring, and Ed25519 response-provenance. Facet is the agent-native protection and monetization substrate installed on top of the emerging horizontal protocol stack. A reference implementation runs inside Autonomi's platform with an F&B supplier-network wedge as the initial go-to-market, but Facet the product is horizontal and available to any website. The paper presents Facet's design principles, the thin `agents.txt` discovery-file format Facet publishes alongside the KYAPay-primary identity layer, HTTP-level protocol sketches for Facet's quote/reserve flow terminating at KYAPay's `charge` API, the Ed25519 response-signing architecture (absent from KYAPay's spec), and a comparative analysis against scraping, API gateways, and closed enterprise APIs. Ecosystem participants, agent operators, site integrators, and standards-body reviewers of the KYAPay IETF draft, are invited to contribute.
@@ -814,3 +806,15 @@ Content-Type: application/json
 **LynZ knowledge graph.** Autonomi's cross-product knowledge graph. Ingests events from Facet, R&D Lab, and Dashboard. Powers the supply-chain intelligence exposed in the Autonomi Dashboard.
 
 **Ed25519.** An elliptic-curve digital signature algorithm (EdDSA over Curve25519). Facet uses Ed25519 for response signatures because of its small key size, fast verification, and deterministic signature generation.
+
+---
+
+## Appendix C, Revision history
+
+### v1.1 update (2026-04-30)
+
+This whitepaper was originally written when Facet was positioned as an agent-commerce gateway for transactional sites (Catalog primitive only). The 2026-04-30 strategic update extends Facet's coverage to **eight business-archetype primitives** (Catalog, Paywalled Content, Subscription, Booking, Date-Bound Inventory, Auction, Quote/RFQ, Credentialed/Regulated) plus a thin View+Handoff primitive for non-transactional listings, anchored by a **Universal Business Index (UBI)** foundation that indexes every business with any web/maps/social presence (~65-80M globally). New §6.5 introduces the primitive layer; renamed §8 + new §8.5 clarify how the four atomic verbs from the original §8 compose into each primitive. Companion canonical references: `docs/founding/PRIMITIVES.md` (per-primitive deep-dive) and `docs/founding/UBI_MODEL.md` (UBI architecture). The protocol layer (KYAPay + MCP + x402 + RFC 9421) is unchanged; the manifest spec bumps from v1.0 → v1.1 (purely additive, see `specs/agents.txt-v1.1.md`).
+
+### v1.2 update (2026-05-01)
+
+Adds a **knowledge graph layer** over UBI: `kg_nodes` / `kg_edges` / `kg_reports` (ported from autonomi-vault's `graphify/` system) provide pgvector semantic search and N-hop typed-edge traversal across the directory. New §6.5.11 introduces the layer and its three Terminal endpoints (`POST /v1/graph/match`, `GET /v1/graph/related`, `GET /v1/graph/path`); the existing §6.5.11 coverage table becomes §6.5.12. Schema, ingestion paths, RPC signatures, and phasing live in `UBI_MODEL.md` §6.5; the file-by-file execution plan is at `tasks/facet-graphify-integration-plan-2026-05-01.md`. No verb changes, no primitive additions, no protocol-layer impact, purely a substrate capability under the existing 8-primitive surface.
