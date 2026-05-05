@@ -4,7 +4,7 @@
 [![license](https://img.shields.io/badge/license-Apache_2.0-blue.svg)](./LICENSE)
 [![spec](https://img.shields.io/badge/spec-v0.1-green.svg)](./SPEC.md)
 
-The index of agent-ready businesses.
+The index for agent-ready businesses.
 
 ## Why
 
