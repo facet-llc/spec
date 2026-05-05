@@ -221,17 +221,17 @@ Schema details, RPC signatures, ingestion adapters, and phasing in `UBI_MODEL.md
 | Bucket (% of ~70M global) | Primary primitive | Coverage state |
 |---|---|---|
 | Transactional w/ structured commerce (~3%) | Catalog | ✅ Today |
-| Bookable services (~12%) | Booking | ❌ → ✅ after W1 |
-| Quote-driven B2B (~5%) | RFQ | ❌ → ✅ after W3 |
-| Walk-in / call-only (~25%) | View+Handoff | ❌ → ✅ after W0 |
-| Info-only / docs / OSS (~30%) | UBI directory | ❌ → ✅ after W0 |
-| Civic / public goods (~10%) | UBI directory | ❌ → ✅ after W0 |
-| No website (social/maps-only ~15%) | UBI w/ social ingestion | ❌ → ✅ after W5 |
-| Subscriptions / cadence (~1%) | Subscription | 🟡 → ✅ after W2 |
-| Paywalled content (~2%) | Paywall | 🟡 → ✅ after W4 |
-| Date-bound inventory (~3%) | Date-Bound | ❌ → ✅ after W2 |
-| Auction (~1%) | Auction | ❌ → ✅ after W4 |
-| Regulated overlay (~4%) | Credentialed | ❌ → ✅ after W3 |
+| Bookable services (~12%) | Booking | ✅ after W1 |
+| Quote-driven B2B (~5%) | RFQ | ✅ after W3 |
+| Walk-in / call-only (~25%) | View+Handoff | ✅ after W0 |
+| Info-only / docs / OSS (~30%) | UBI directory | ✅ after W0 |
+| Civic / public goods (~10%) | UBI directory | ✅ after W0 |
+| No website (social/maps-only ~15%) | UBI w/ social ingestion | ✅ after W5 |
+| Subscriptions / cadence (~1%) | Subscription | ✅ after W2 |
+| Paywalled content (~2%) | Paywall | ✅ after W4 |
+| Date-bound inventory (~3%) | Date-Bound | ✅ after W2 |
+| Auction (~1%) | Auction | ✅ after W4 |
+| Regulated overlay (~4%) | Credentialed | ✅ after W3 |
 
 **Total coverage at end of plan: ~95%** of all businesses with web/maps/social presence have a Facet primitive that fits their shape. The remaining ~5% are explicitly out-of-scope (finance, gambling, healthcare PHI, gov submission, firearms transfer) per per-primitive DON'T-BUILD lists in `PRIMITIVES.md` §4.
 
