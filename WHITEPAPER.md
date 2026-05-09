@@ -154,7 +154,7 @@ Every Terminal response carries an `X-Facet-Signature` header. Full signature st
 
 The nine technical components in §6 form the **infrastructure layer**. Sitting above them is the **product layer**: eight business-archetype primitives that wrap the four atomic transaction verbs (§8) with archetype-specific semantics. Customers buy primitives; primitives buy verbs; verbs ride the rails.
 
-A site declares which primitives it has activated via `Capabilities:` in `agents.txt v1.1` (see `specs/agents.txt-v1.1.md` §5). One site typically activates 2–4 (an F&B co-manufacturer activates **Catalog + Quote/RFQ + Paywalled Content + Credentialed**; a hotel activates **Booking + Date-Bound Inventory + Paywalled Content**). The primitives compose freely.
+A site declares which primitives it has activated via the `Capabilities:` field in `agents.txt v1.1`. One site typically activates 2–4 (an F&B co-manufacturer activates **Catalog + Quote/RFQ + Paywalled Content + Credentialed**; a hotel activates **Booking + Date-Bound Inventory + Paywalled Content**). The primitives compose freely.
 
 ### 6.5.1 Catalog (fixed-price, in-stock)
 
@@ -194,7 +194,7 @@ A business with a UBI listing but **no transactional verbs activated**. agent re
 
 ### 6.5.10 Universal Business Index (foundation, not a primitive)
 
-The substrate every primitive runs against. Append-mostly directory of every business with any web/maps/social presence (~65–80M globally), seeded from OpenStreetMap (ODbL backbone), state license registries (TX/CA/FL/NY DOL plumbing/electrical/contractor), USDA/FDA establishment registries (FSMA 117 food facilities), Crunchbase (SaaS), GuideStar (nonprofits), Google Places (enrichment-only for claimed listings). Owner-claim flow: unclaimed → claimed_unverified (postcard/phone OTP) → verified_owner (DNS/GMB OAuth) → kyc_verified (Stripe Connect KYC). Each tier unlocks more primitive activation. Anti-gaming: agent reputation scores tied to KYA identity + on-chain payment proof, fundamentally harder to fake than human Yelp reviews. See `docs/founding/UBI_MODEL.md` for the full schema, ingestion pipeline, claim flow, and reputation system.
+The substrate every primitive runs against. Append-mostly directory of every business with any web/maps/social presence (~65–80M globally), seeded from OpenStreetMap (ODbL backbone), state license registries (TX/CA/FL/NY DOL plumbing/electrical/contractor), USDA/FDA establishment registries (FSMA 117 food facilities), Crunchbase (SaaS), GuideStar (nonprofits), Google Places (enrichment-only for claimed listings). Owner-claim flow: unclaimed → claimed_unverified (postcard/phone OTP) → verified_owner (DNS/GMB OAuth) → kyc_verified (Stripe Connect KYC). Each tier unlocks more primitive activation. Anti-gaming: agent reputation scores tied to KYA identity + on-chain payment proof, fundamentally harder to fake than human Yelp reviews.
 
 ### 6.5.11 Knowledge Graph Layer (UBI substrate, added v1.2)
 
@@ -202,13 +202,13 @@ The relational shape of UBI answers "find me businesses near 75002 with NAICS 23
 
 The knowledge graph layer adds both as a thin substrate over `universal_business_index` (no duplication of business data, no new authoritative directory). Three new Postgres tables -- `kg_nodes`, `kg_edges`, `kg_reports` -- form the graph substrate, with `org_id` and `access_level` dropped (Facet is single-tenant at the DB level today) and a `kg_nodes.ubi_id` foreign key that lets business nodes link 1:1 to UBI rows. Pgvector embeddings (`text-embedding-3-small`, 1536-dim, IVFFlat lists=200) support `facet_kg_match_nodes` for semantic search; a recursive BFS RPC `facet_kg_traverse` supports N-hop walks across typed relations (`supplies`, `licensed_by`, `located_in`, `complies_with`, `same_naics`, `same_zip`, `same_corridor`, `competes_with`, `derived_from`, `semantically_similar_to`, `references`, `cites`, `owns`).
 
-Five ingestion paths populate the graph, each with its own `source` tag for dedup and rollback: (1) **UBI backfill**. one node per `universal_business_index` row, `node_type='business'`; (2) **derived structural edges**. `same_naics` / `same_zip` / `licensed_by` / `located_in` computed entirely from existing UBI columns; (3) **concept extraction from founding docs** via `gpt-4o-mini` against `UBI_MODEL.md`, `PRIMITIVES.md`, this whitepaper, and the architecture doc; (4) **regulatory concepts**. FSMA-204 / NAICS-7 / OSM-tag-vocab / state-licensing-board concept layer; (5) **semantic embeddings**. daily refresh, ~$1 per 1M nodes one-shot.
+Five ingestion paths populate the graph, each with its own `source` tag for dedup and rollback: (1) **UBI backfill**. one node per `universal_business_index` row, `node_type='business'`; (2) **derived structural edges**. `same_naics` / `same_zip` / `licensed_by` / `located_in` computed entirely from existing UBI columns; (3) **concept extraction** via `gpt-4o-mini` against the protocol architecture corpus; (4) **regulatory concepts**. FSMA-204 / NAICS-7 / OSM-tag-vocab / state-licensing-board concept layer; (5) **semantic embeddings**. daily refresh, ~$1 per 1M nodes one-shot.
 
 Three Terminal Edge Function endpoints expose the graph to agents (auth via the same `requireSiteRole` site-role pattern that protects every other Terminal route. never Origin/Referer): `POST /v1/graph/match` for semantic search ("find me businesses similar to X"), `GET /v1/graph/related` for hop-bounded neighborhood retrieval ("show me 2-hop substitutes filtered by `same_naics` + `licensed_by`"), and `GET /v1/graph/path` for bidirectional reachability ("is supplier X reachable from buyer Y in ≤4 hops"). Rate-limits 30/min and 60/min per token.
 
 What the graph unlocks for agents: substitute discovery that crosses NAICS boundaries (embedding ANN), supply-chain trace with provenance per hop, FSMA-204 compliance audit by reachability to a regulation concept node, geo-cluster expansion beyond bounding-box queries, cold-start reputation inheritance from semantically-similar verified peers, and founding-doc semantic Q&A. None of this is exposed via direct Postgres reads. every graph query is mediated by a Terminal endpoint with the same RLS posture and rate-limit discipline as every other Facet primitive.
 
-Schema details, RPC signatures, ingestion adapters, and phasing in `UBI_MODEL.md` §6.5; file-by-file execution plan in `tasks/facet-graphify-integration-plan-2026-05-01.md`. v1 ships in seven phases (schema → backfill → embed → derive → concepts → query RPCs → Terminal endpoints); v1.1 adds an admin browser and a daily scheduled rebuild.
+The graph layer is composed of: schema, UBI backfill, semantic embeddings, derived structural edges (`same_naics` / `same_zip` / `licensed_by` / `located_in`), a regulatory concept layer, query RPCs, and the three Terminal endpoints above. An admin graph browser and a daily scheduled rebuild round out the surface.
 
 ### 6.5.12 Coverage at end of plan
 
@@ -227,13 +227,13 @@ Schema details, RPC signatures, ingestion adapters, and phasing in `UBI_MODEL.md
 | Auction (~1%) | Auction | ✅ after W4 |
 | Regulated overlay (~4%) | Credentialed | ✅ after W3 |
 
-**Total coverage at end of plan: ~95%** of all businesses with web/maps/social presence have a Facet primitive that fits their shape. The remaining ~5% are explicitly out-of-scope (finance, gambling, healthcare PHI, gov submission, firearms transfer) per per-primitive DON'T-BUILD lists in `PRIMITIVES.md` §4.
+**Total coverage at end of plan: ~95%** of all businesses with web/maps/social presence have a Facet primitive that fits their shape. The remaining ~5% are explicitly out-of-scope (finance, gambling, healthcare PHI, gov submission, firearms transfer) per per-primitive DON'T-BUILD scope decisions.
 
 ---
 
 ## 7. agents.txt v0.2. Thin Discovery Manifest
 
-> **v1.1 update (2026-04-30):** the manifest spec has bumped to v1.1 with new top-level field `Capabilities:` declaring which of the 8 archetype primitives the supplier has activated, plus optional sections `[business_index]`, `[booking]`, `[auction]`, `[rfq]`, `[regulated]` for primitive-specific config. Backward-compat clause: v1.1 parsers MUST parse v1.0 + v0.2 docs unchanged. See `specs/agents.txt-v1.1.md` for the full spec; this section retains the v0.2 reference for archive purposes.
+> **v1.1 update (2026-04-30):** the manifest spec has bumped to v1.1 with new top-level field `Capabilities:` declaring which of the 8 archetype primitives the supplier has activated, plus optional sections `[business_index]`, `[booking]`, `[auction]`, `[rfq]`, `[regulated]` for primitive-specific config. Backward-compat clause: v1.1 parsers MUST parse v1.0 + v0.2 docs unchanged. The full v1.1 spec is published alongside this whitepaper; this section retains the v0.2 reference for archive purposes.
 
 The `agents.txt` file Facet publishes is a **thin discovery manifest**, not a competing permissions standard. It declares where to find the supplier's Terminal, which KYAPay issuers the supplier trusts, and F&B-specific pricing hints. Actual permissions enforcement happens at the Terminal against the KYAPay token; `agents.txt` is a pointer. This is a deliberate retirement of Facet's earlier v0.1 "declarative permissions standard" ambition, given that KYAPay + RFC 9421 already occupy the permissions-and-auth space with real institutional weight.
 
@@ -424,7 +424,7 @@ Agent calls supported in this configuration:
 - `subscribe_webhook` for any of the above + RFQ-specific events
 - All transactional calls require `kya_proof_attestation` for `license:dea` + `kyc:basic` before executing
 
-Per-primitive deep-dive: see `docs/founding/PRIMITIVES.md`.
+Per-primitive deep-dive lives in the companion primitives spec.
 
 ---
 
@@ -674,7 +674,7 @@ For completeness, one path Facet explicitly does not take: Facet does not deploy
 
 **Standards-body reviewers.** `agents.txt` v0.1 is published under Apache 2.0 on the Facet GitHub. Pre-IETF-draft review from W3C and IETF participants is welcome. The goal is formal IETF draft submission by Q4 of the execution plan. Contact: `standards@facet.llc`.
 
-**Reference implementations.** Open-source reference implementations of the `agents.txt` parser, Facet Terminal SDK (Node, Deno, Python), and Ed25519 signature verifier will be published progressively. Track at `github.com/lynz-tonomi/facet` once the public repository ships.
+**Reference implementations.** Open-source reference implementations of the `agents.txt` parser, Facet Terminal SDK (Node, Deno, Python), and Ed25519 signature verifier are published progressively at `github.com/facet-llc/spec`.
 
 ---
 
@@ -818,8 +818,8 @@ Content-Type: application/json
 
 ## 0. v1.1 update note (2026-04-30)
 
-This whitepaper was originally written when Facet was positioned as an agent-commerce gateway for transactional sites (Catalog primitive only). The 2026-04-30 strategic update extends Facet's coverage to **eight business-archetype primitives** (Catalog, Paywalled Content, Subscription, Booking, Date-Bound Inventory, Auction, Quote/RFQ, Credentialed/Regulated) plus a thin View+Handoff primitive for non-transactional listings, anchored by a **Universal Business Index (UBI)** foundation that indexes every business with any web/maps/social presence (~65–80M globally). New §6.5 introduces the primitive layer; renamed §8 + new §8.5 clarify how the four atomic verbs from the original §8 compose into each primitive. Companion canonical references: `docs/founding/PRIMITIVES.md` (per-primitive deep-dive) and `docs/founding/UBI_MODEL.md` (UBI architecture). The protocol layer (KYAPay + MCP + x402 + RFC 9421) is unchanged; the manifest spec bumps from v1.0 → v1.1 (purely additive. see `specs/agents.txt-v1.1.md`).
+This whitepaper was originally written when Facet was positioned as an agent-commerce gateway for transactional sites (Catalog primitive only). The 2026-04-30 strategic update extends Facet's coverage to **eight business-archetype primitives** (Catalog, Paywalled Content, Subscription, Booking, Date-Bound Inventory, Auction, Quote/RFQ, Credentialed/Regulated) plus a thin View+Handoff primitive for non-transactional listings, anchored by a **Universal Business Index (UBI)** foundation that indexes every business with any web/maps/social presence (~65–80M globally). New §6.5 introduces the primitive layer; renamed §8 + new §8.5 clarify how the four atomic verbs from the original §8 compose into each primitive. The protocol layer (KYAPay + MCP + x402 + RFC 9421) is unchanged; the manifest spec bumps from v1.0 → v1.1 (purely additive).
 
 ## 0.1 v1.2 update note (2026-05-01)
 
-Adds a **knowledge graph layer** over UBI: `kg_nodes` / `kg_edges` / `kg_reports` provide pgvector semantic search and N-hop typed-edge traversal across the directory. New §6.5.11 introduces the layer and its three Terminal endpoints (`POST /v1/graph/match`, `GET /v1/graph/related`, `GET /v1/graph/path`); the existing §6.5.11 coverage table becomes §6.5.12. Schema, ingestion paths, RPC signatures, and phasing live in `UBI_MODEL.md` §6.5; the file-by-file execution plan is at `tasks/facet-graphify-integration-plan-2026-05-01.md`. No verb changes, no primitive additions, no protocol-layer impact. purely a substrate capability under the existing 8-primitive surface.
+Adds a **knowledge graph layer** over UBI: `kg_nodes` / `kg_edges` / `kg_reports` provide pgvector semantic search and N-hop typed-edge traversal across the directory. New §6.5.11 introduces the layer and its three Terminal endpoints (`POST /v1/graph/match`, `GET /v1/graph/related`, `GET /v1/graph/path`); the existing §6.5.11 coverage table becomes §6.5.12. No verb changes, no primitive additions, no protocol-layer impact. Purely a substrate capability under the existing 8-primitive surface.
