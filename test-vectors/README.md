@@ -52,20 +52,13 @@ Requires `pyjwt` and `cryptography`.
 
 ## Run against a verifier
 
-```typescript
-import { verifyKYAToken } from '@facet/sdk-js';
-import vector from './test-vectors/kyapay/01-valid-kya-jwt.json';
+Load each vector, run its `input` through a KYAPay verifier under the frozen
+`input.now` clock, and assert the verdict equals `expected.verified`. Each
+vector carries `input.jwt`, `input.verify_options`, and `input.now`, with
+`expected.verified` (and, on failure, `expected.reason`).
 
-const now = vector.input.now;
-const result = await verifyKYAToken(vector.input.jwt, {
-  ...vector.input.verify_options,
-  currentTime: now,
-});
-
-if (result.verified !== vector.expected.verified) {
-  throw new Error(`${vector.name}: verifier disagreed with expected outcome`);
-}
-```
+A runnable verifier and a worked conformance harness live in the SDK repo,
+[`github.com/facet-llc/sdk`](https://github.com/facet-llc/sdk).
 
 ## Stability
 

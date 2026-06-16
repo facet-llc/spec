@@ -10,12 +10,12 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 ### Changed
 
 - Tagline: "the search engine for agentic commerce" became "the index of agent-ready businesses". Sharper category framing.
+- SDKs moved to a dedicated repository, [`github.com/facet-llc/sdk`](https://github.com/facet-llc/sdk), published under `@facet-llc/*` (`@facet-llc/protocol`, `@facet-llc/client`, `@facet-llc/sdk-node`) plus the payment-rail adapters. The in-repo `sdks/` scaffolds were removed so this repo stays the spec, schemas, and conformance vectors.
 
 ### Added
 
 - JSON Schema definitions for the six v0.1 endpoints, in `schemas/`.
 - KYAPay JWT conformance test vectors, in `test-vectors/kyapay/`.
-- Reference TypeScript SDK scaffold (`@facet/sdk-js` v0.0.1) with a real KYAPay verifier built on `jose`, in `sdks/typescript/`.
 
 ## [0.1.0] - 2026-05-03
 

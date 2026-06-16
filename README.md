@@ -36,7 +36,7 @@ The four open standards we ride:
 
 | Layer | Standard | What we do with it |
 |---|---|---|
-| Identity | KYAPay (IETF) | Run the leading verifier in production |
+| Identity | KYAPay (IETF) | Run a verifier in production |
 | Discovery | MCP (Anthropic) | `/v1/capabilities` is MCP-native |
 | Payments | x402 (Coinbase) | USDC settlement on Base L2 |
 | Bot signing | RFC 9421 (Cloudflare) | KYAPay JWTs are aligned |
@@ -46,8 +46,7 @@ The four open standards we ride:
 - [`SPEC.md`](./SPEC.md): v0.1 protocol spec, RFC-style. Read this if you're implementing a verifier or a Facet-compliant merchant.
 - [`ARCHITECTURE.md`](./ARCHITECTURE.md): how the pieces fit, where the trust boundaries are, the protocol-flow diagram.
 - [`schemas/`](./schemas/): JSON Schema for all six v0.1 endpoints.
-- [`sdks/typescript/`](./sdks/typescript/): `@facet/sdk-js` reference implementation. Verifier (works today) + Terminal client (search/quote/reserve/settle/audit).
-- [`sdks/typescript/examples/hello-agent/`](./sdks/typescript/examples/hello-agent/): end-to-end demo. One file, walks the whole protocol against `facet.llc`.
+- [`github.com/facet-llc/sdk`](https://github.com/facet-llc/sdk): the SDKs and reference rail adapters, published Apache-2.0 under `@facet-llc/*` (`@facet-llc/protocol`, `@facet-llc/client`, `@facet-llc/sdk-node`). Verifier + Terminal client (search/quote/reserve/settle/audit) and the payment-rail adapters live there.
 - [`test-vectors/kyapay/`](./test-vectors/kyapay/): conformance vectors. Real ES256-signed JWTs, deterministic against frozen `now`. 10 vectors covering happy path + every defense.
 
 ## What's not in here

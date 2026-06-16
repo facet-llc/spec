@@ -1,6 +1,6 @@
 # Architecture
 
-Facet is the protocol layer for agentic commerce. This doc explains how the pieces fit together and where the trust boundaries are. For wire format see [`SPEC.md`](./SPEC.md). For the SDK see [`sdks/typescript/`](./sdks/typescript/).
+Facet is the protocol layer for agentic commerce. This doc explains how the pieces fit together and where the trust boundaries are. For wire format see [`SPEC.md`](./SPEC.md). For the SDK see [`github.com/facet-llc/sdk`](https://github.com/facet-llc/sdk).
 
 ## The four open standards Facet rides
 
@@ -101,11 +101,9 @@ Two trust gates matter most:
 |  - Reputation registry (DID-keyed)             |
 |  - Agent WAF (verifier-tier policy at edge)    |
 +------------------------------------------------+
-|  Facet protocol spec + SDKs   (OPEN, this repo)|
+|  Facet protocol spec          (OPEN, this repo)|
 |  - SPEC.md                                     |
-|  - schemas/v1.*.json                           |
-|  - sdks/typescript/ (verifier + Terminal)      |
-|  - test-vectors/kyapay/                        |
+|  - schemas/v1.*.json                           ||  - test-vectors/kyapay/                        |
 +------------------------------------------------+
 |  Open standards we ride       (OPEN, others)   |
 |  - KYAPay (IETF Independent Submission)        |
@@ -119,34 +117,17 @@ The split is deliberate. The protocol grows because anyone can implement it. The
 
 ## SDK shape
 
-`@facet/sdk-js` v0.0.x exposes two surfaces:
+The SDK exposes two surfaces, both published under `@facet-llc/*` in
+[`github.com/facet-llc/sdk`](https://github.com/facet-llc/sdk):
 
-**Verifier** (merchant-side or agent-side):
+- **Verifier** (merchant-side or agent-side): validate an incoming KYAPay token
+  with issuer pinning, JWKS fetch, audience binding, temporal checks, and a
+  replay nonce.
+- **Terminal client** (agent-side): walk the four primitives end to end
+  (search, quote, reserve, settle) plus the audit record.
 
-```ts
-import { verifyKYAToken } from '@facet/sdk-js';
-
-const result = await verifyKYAToken(jwt, {
-  audience: 'https://my-merchant.com',
-  expectedIssuers: ['https://issuer.example.com'],
-});
-```
-
-**Terminal client** (agent-side):
-
-```ts
-import { FacetTerminal } from '@facet/sdk-js';
-
-const facet = new FacetTerminal({ getKYAToken: () => token });
-const search = await facet.searchListings({ q: 'dallas plumbing' });
-const quote = await facet.requestQuote({ listing_id: search.results[0].id });
-const reservation = await facet.reserve({ quote_id: quote.quote_id });
-// ... pay via x402, then:
-const receipt = await facet.settle({ reservation_id, x402_payment });
-const audit = await facet.getAuditRecord(receipt.txn_id);
-```
-
-End-to-end example in [`sdks/typescript/examples/hello-agent/`](./sdks/typescript/examples/hello-agent/).
+Runnable examples and the published packages (`@facet-llc/protocol`,
+`@facet-llc/client`, `@facet-llc/sdk-node`) live in that repository.
 
 ## Roadmap
 
