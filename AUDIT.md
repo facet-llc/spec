@@ -69,7 +69,7 @@ Verifiers MUST:
 5. Verify the Ed25519 signature over the canonical bytes.
 6. Reject if any check fails. No silent fallbacks, no key fuzzy-matching.
 
-The reference TypeScript implementation lives in [`sdks/typescript/src/audit.ts`](./sdks/typescript/src/audit.ts) and exposes `verifyAuditRecord(record, options)`.
+The reference TypeScript implementation lives in the SDK repo, [`github.com/facet-llc/sdk`](https://github.com/facet-llc/sdk), which exposes `verifyAuditRecord(record, options)`.
 
 ## Conformance vectors
 

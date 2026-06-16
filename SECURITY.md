@@ -18,7 +18,7 @@ We respond within 72 hours. Coordinated disclosure window is 90 days from acknow
 In scope:
 
 - The protocol spec in `SPEC.md`
-- Any reference verifier or SDK shipped from this repo (`sdks/*`), all versions
+- SDK code now lives in [`github.com/facet-llc/sdk`](https://github.com/facet-llc/sdk); report SDK vulnerabilities against that repository
 - The conformance test vectors and generator (`test-vectors/`)
 - The JSON schemas (`schemas/`)
 
