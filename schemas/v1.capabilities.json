@@ -9,7 +9,7 @@
       "properties": {
         "protocolVersion": {
           "type": "string",
-          "description": "MCP protocol version. v0.1 targets 2024-11-05."
+          "description": "MCP protocol version echoed by this legacy manifest endpoint, retained for v0.1 clients. The current MCP surface is POST /ucp/mcp, which negotiates per request and advertises its supported revisions via server/discover. See SPEC.md section 4."
         },
         "serverInfo": {
           "type": "object",
