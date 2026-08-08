@@ -1,0 +1,51 @@
+# Dependabot for the public spec repo.
+#
+# This file exists because it did not: the `sdk (typescript)` npm audit gate
+# went red on six advisories (5 high) reached through the build toolchain, and
+# nothing was watching dependencies here, so it simply stayed red. Every one
+# had a fix available; it was a stale lockfile, not a constraint. Refreshing
+# the lockfile clears the symptom, this closes the hole.
+#
+# Mirrors the monorepo's config (minor + patch grouped into one weekly PR,
+# majors kept separate so they get individual attention) and, via the
+# github-actions ecosystem, keeps SHA-pinned action versions from rotting.
+version: 2
+updates:
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: "ci"
+  # The SDKs are published artifacts, so their toolchains are what the audit
+  # gate scores. Both live one directory down; Dependabot needs the manifest
+  # directory, not the repo root.
+  - package-ecosystem: "npm"
+    directory: "/sdks/typescript"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: "chore(deps)"
+    groups:
+      npm-minor-patch:
+        patterns:
+          - "*"
+        update-types:
+          - "minor"
+          - "patch"
+  - package-ecosystem: "pip"
+    directory: "/sdks/python"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: "chore(deps)"
+    groups:
+      pip-minor-patch:
+        patterns:
+          - "*"
+        update-types:
+          - "minor"
+          - "patch"
