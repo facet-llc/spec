@@ -2,7 +2,7 @@
 
 [![ci](https://github.com/facet-llc/spec/actions/workflows/ci.yml/badge.svg)](https://github.com/facet-llc/spec/actions/workflows/ci.yml)
 [![license](https://img.shields.io/badge/license-Apache_2.0-blue.svg)](./LICENSE)
-[![spec](https://img.shields.io/badge/spec-v0.1-green.svg)](./SPEC.md)
+[![spec](https://img.shields.io/badge/spec-v0.2-green.svg)](./SPEC.md)
 
 The index for agent-ready businesses.
 
@@ -37,7 +37,7 @@ The four open standards we ride:
 | Layer | Standard | What we do with it |
 |---|---|---|
 | Identity | KYAPay (IETF) | Run the leading verifier in production |
-| Discovery | MCP (Anthropic) | `/v1/capabilities` is MCP-native |
+| Discovery | MCP (Anthropic) | `POST /ucp/mcp` speaks the stateless revision, with `2025-06-18` back-compat |
 | Payments | x402 (Coinbase) | USDC settlement on Base L2 |
 | Bot signing | RFC 9421 (Cloudflare) | KYAPay JWTs are aligned |
 
