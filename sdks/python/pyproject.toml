@@ -20,7 +20,7 @@ classifiers = [
     "Topic :: Software Development :: Libraries",
 ]
 dependencies = [
-    "PyJWT[crypto]>=2.8",
+    "PyJWT[crypto]>=2.13.0",
     "httpx>=0.27",
     "cryptography>=42",
 ]
