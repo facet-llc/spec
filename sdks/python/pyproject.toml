@@ -22,7 +22,7 @@ classifiers = [
 dependencies = [
     "PyJWT[crypto]>=2.8",
     "httpx>=0.27",
-    "cryptography>=42",
+    "cryptography>=50.0.1",
 ]
 
 [project.optional-dependencies]
